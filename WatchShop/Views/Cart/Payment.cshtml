@@ -1,0 +1,92 @@
+﻿@model List<WatchShop.Models.CartItem>
+@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="cart_area section_padding">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="table-responsive">
+
+
+                @if (Model.Count() > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sản phẩm</th>
+                                <th scope="col">Giá</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="media">
+                                            <div class="d-flex">
+                                                <img src="@item.Product.Image" alt="@item.Product.Name" />
+                                            </div>
+                                            <div class="media-body">
+                                                <p>@item.Product.Name</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (item.Product.PromotionPrice == 0)
+                                        {
+                                            <h5>@(item.Product.Price)đ</h5>
+                                        }
+                                        else
+                                        {
+                                            <h5>@(item.Product.PromotionPrice)đ</h5>
+                                        }
+                                    </td>
+                                    <td>
+                                        <h5>@item.Quantity Chiếc</h5>
+                                    </td>
+                                    <td>
+                                        @if (item.Product.PromotionPrice == 0)
+                                        {
+                                            <h5>@(item.Product.Price * item.Quantity)đ</h5>
+                                        }
+                                        else
+                                        {
+                                            <h5>@(item.Product.PromotionPrice * item.Quantity)đ</h5>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="col-md-8">
+                        <h3>Điền Thông Tin</h3>
+                        @using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
+                        {
+                            <div class="form-group">
+                                <label>Người nhận</label>
+                                <input name="shipName" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Điện thoại</label>
+                                <input name="mobile" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Địa chỉ</label>
+                                <input name="address" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input name="email" class="form-control" />
+                            </div>
+                            <button type="submit" class="btn_3">Gửi đơn hàng</button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,101 @@
+/*------------------------------------------------------------
+|  Author: Free-Template.co                                   
+|  Author URL: https://free-template.co/                      
+|  License: https://creativecommons.org/licenses/by/3.0/      
+|  License URL: https://creativecommons.org/licenses/by/3.0/  
+|  Template License: https://free-template.co/template-license/
+-------------------------------------------------------------*/
+* {
+  -webkit-transition: .3s all ease;
+  -o-transition: .3s all ease;
+  transition: .3s all ease; }
+
+.ftco-404 {
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center center; }
+  .ftco-404 a {
+    color: #fff; }
+  .ftco-404:before {
+    content: "";
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.44); }
+  .ftco-404 .container {
+    position: relative;
+    z-index: 2; }
+  .ftco-404, .ftco-404 .row {
+    height: 100vh;
+    min-height: 900px; }
+  .ftco-404 .logo {
+    display: inline-block;
+    position: relative;
+    -webkit-transition: .3s all ease-in-out;
+    -o-transition: .3s all ease-in-out;
+    transition: .3s all ease-in-out;
+    top: 0; }
+    .ftco-404 .logo img {
+      max-width: 100px;
+      margin-bottom: 2rem; }
+    .ftco-404 .logo:hover {
+      top: -10px; }
+  .ftco-404 .h1, .ftco-404 h2 {
+    color: #fff; }
+  .ftco-404 .h1 {
+    font-size: 18rem;
+    font-weight: 900;
+    position: relative; }
+    @media screen and (max-width: 980px) {
+      .ftco-404 .h1 {
+        font-size: 10rem; } }
+  .ftco-404 h2 {
+    font-size: 2rem; }
+  .ftco-404 p {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.8); }
+  .ftco-404 .btn {
+    padding: .8rem 2rem; }
+    .ftco-404 .btn:hover, .ftco-404 .btn:active, .ftco-404 .btn:focus {
+      outline: none;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important; }
+    .ftco-404 .btn.btn-home {
+      background: #00bd56;
+      color: #fff;
+      border-color: #00bd56;
+      border-width: 2px; }
+      .ftco-404 .btn.btn-home:hover {
+        background: #5bd713;
+        border-color: #5bd713; }
+    .ftco-404 .btn.btn-outline {
+      border-color: #fff;
+      border-width: 2px;
+      background: transparent;
+      color: #fff; }
+      .ftco-404 .btn.btn-outline:hover {
+        background: #fff;
+        color: #00bd56; }
+  .ftco-404 .last {
+    line-height: 0;
+    position: relative;
+    display: inline-block; }
+    .ftco-404 .last.sleep {
+      opacity: 0;
+      visibility: hidden;
+      -webkit-transition: .8s all ease-in-out;
+      -o-transition: .8s all ease-in-out;
+      transition: .8s all ease-in-out;
+      top: -70px; }
+    .ftco-404 .last.awake {
+      opacity: 1;
+      visibility: visible;
+      top: 0px; }
+
+.copyright {
+  line-height: 1; }
+  .copyright small {
+    font-size: .7rem; }

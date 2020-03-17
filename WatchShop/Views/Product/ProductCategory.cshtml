@@ -1,0 +1,65 @@
+﻿@model PagedList.IPagedList<Model.EF.Product>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "WatchShop - Danh mục sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Category = (Model.EF.ProductCategory)ViewBag.Category;
+    var listNewProducts = (List<Model.EF.Product>)ViewBag.listNewProducts;
+    var listFeatureProducts = (List<Model.EF.Product>)ViewBag.listFeatureProducts;
+}
+<!--================Category Product Area =================-->
+<section class="cat_product_area section_padding border_top">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                @{Html.RenderAction("ProductCategoryMenu", "Product");}
+
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product_top_bar d-flex justify-content-between align-items-center">
+                            <div class="single_product_menu product_bar_item">
+                                <h2>@Category.Name</h2>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="single_category_product">
+                                <div class="single_category_img">
+                                    <img src="@item.Image" alt="">
+                                    <div class="category_social_icon">
+                                        <ul>
+                                            <a href="#"><i class="fas fa-heart"></i></a>
+                                            <a href="/Them-gio-hang?productId=@item.ID&quantity=1"><i class="fas fa-shopping-cart"></i></a>
+                                        </ul>
+                                    </div>
+                                    <div class="category_product_text">
+                                        <a href="/Chi-tiet/@item.MetaTitle-@item.ID"><h5>@item.Name</h5></a>
+
+                                        @if (item.PromotionPrice != 0)
+                                        {
+                                            <p>@(item.PromotionPrice.ToString("N0"))đ <strike style="font-size: 16px; font-weight: normal">@(item.Price.ToString("N0"))đ</strike></p>
+                                        }
+                                        else
+                                        {
+                                            <p>@(item.Price.ToString("N0"))đ</p>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12">
+                        <nav class="blog-pagination justify-content-center d-flex">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

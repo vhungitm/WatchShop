@@ -1,0 +1,49 @@
+﻿@model List<Model.EF.ProductCategory>
+
+<aside class="left_widgets p_filter_widgets sidebar_box_shadow">
+    <div class="l_w_title">
+        <h3>Danh mục sản phẩm</h3>
+    </div>
+    <div class="widgets_inner">
+        <ul class="list">
+            @foreach (var item in Model.Where(x => x.ParentID == null))
+            {
+                var child = Model.Where(x => x.ParentID == item.ID);
+
+                if (child.Count() > 0)
+                {
+                    <li class="sub-menu">
+                        <a href="/san-pham/@item.MetaTitle-@item.ID" class=" d-flex justify-content-between">
+                            @item.Name
+                            <div class="right ti-plus"></div>
+                        </a>
+
+                        <ul>
+                            @foreach (var childItem in child)
+                            {
+                                <li>
+                                    <a href="/San-pham/@childItem.MetaTitle-@childItem.ID">@childItem.Name</a>
+                                </li>
+                            }
+
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href="/San-pham/@item.MetaTitle-@item.ID">@item.Name</a>
+                    </li>
+
+                }
+            }
+        </ul>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $(".right.ti-plus").off('click').on('click', function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</aside>

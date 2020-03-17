@@ -1,0 +1,72 @@
+﻿
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title</title>
+
+    <!-- Icon -->
+    <link rel="shortcut icon" type="image/png" href="~/Assets/Admin/img/clock.ico" />
+
+    <!-- css -->
+    @Styles.Render("~/bundles/client/css")
+    <script src="~/assets/client/js/jquery-1.12.1.min.js"></script>
+
+</head>
+
+<body class="bg-white">
+    <!--::header part start::-->
+    <header class="main_menu home_menu">
+        <div class="container-fluid">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-11">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="/">
+                           <img src="/assets/client/img/logo.png" /> 
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="menu_icon"><i class="fas fa-bars"></i></span>
+                        </button>
+                        <!-- Menu part start -->
+                        @{Html.RenderAction("MainMenu", "Home");}
+                        <!-- Menu part end -->
+                        <div class="hearer_icon d-flex">
+                            <a href="/Gio-hang"><i class="fas fa-shopping-bag" style="color: black; font-size: 18px"></i></a>
+                            <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="search_input" id="search_input_box">
+            <div class="container ">
+                <form class="d-flex justify-content-between search-inner" action="/tim-kiem" method="get">
+                    <input type="text" class="form-control" id="txtKeyword" placeholder="Tìm kiếm" name="keyword">
+
+                    <button type="submit" class="btn"></button>
+                    <span class="ti-close" id="close_search" title="Close Search"></span>
+                </form>
+            </div>
+        </div>
+    </header>
+    <!-- Thông báo -->
+    @if (TempData["AlertMessage"] != null)
+    {
+        <div id="AlertBox" class="alert @TempData["AlertType"] hide" style="margin: 10px">
+            @Html.Raw(TempData["AlertMessage"])
+        </div>
+    }
+
+
+    <!-- Header part end-->
+    @RenderBody()
+
+    @{Html.RenderAction("Footer", "Home");}
+    @RenderSection("jsFooter", required: false)
+</body>
+
+</html>

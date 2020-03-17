@@ -1,0 +1,53 @@
+﻿@model PagedList.IPagedList<Model.EF.Content>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Tin tức, sự kiện";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="blog_area section_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-5 mb-lg-0">
+                <div class="blog_left_sidebar">
+                    @foreach (var item in Model)
+                    {
+                        <article class="blog_item">
+                            <div class="blog_item_img">
+                                <img class="card-img rounded-0" src="@item.Image" height="350">
+                                <a href="/Tin-tuc/@item.MetaTitle-@item.ID" class="blog_item_date">
+                                    <center>
+                                        <h3>@(item.CreatedDate.Value.Day.ToString().Length < 2 ? "0" : "")@item.CreatedDate.Value.Day</h3>
+                                        <p>TH@(item.CreatedDate.Value.Month.ToString().Length < 2 ? "0" : "")@item.CreatedDate.Value.Month</p>
+                                    </center>
+                                </a>
+                            </div>
+
+                            <div class="blog_details">
+                                <a class="d-inline-block" href="/Tin-tuc/@item.MetaTitle-@item.ID">
+                                    <h2>@item.Name</h2>
+                                </a>
+                                <p>
+                                    @item.Description
+                                </p>
+                                <ul class="blog-info-link">
+                                    <li><a href="#"><i class="far fa-user"></i>@item.CreatedBy</a></li>
+                                </ul>
+                            </div>
+                        </article>
+                    }
+
+
+                    <nav class="blog-pagination justify-content-center d-flex">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="blog_right_sidebar">
+                    @{Html.RenderAction("NavContent", "Content");}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

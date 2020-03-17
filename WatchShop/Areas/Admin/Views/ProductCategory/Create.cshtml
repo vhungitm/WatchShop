@@ -1,0 +1,79 @@
+﻿@model Model.EF.ProductCategory
+
+@{
+    ViewBag.Title = "Thêm mới danh mục sản phẩm";
+    Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Header{
+    Danh mục sản phẩm
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thêm mới</h6>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "ProductCategory", FormMethod.Post, new { @class = "user" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                <label>Tên danh mục</label>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+
+            <div class="form-group">
+                <label>Đường dẫn</label>
+                @Html.TextBoxFor(model => model.MetaTitle, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MetaTitle)
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label>ID danh mục cấp trên</label>
+                    @Html.TextBoxFor(model => model.ParentID, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ParentID)
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Thứ tự</label>
+                    @Html.TextBoxFor(model => model.DisplayOrder, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Meta Keyworks</label>
+                @Html.TextBoxFor(model => model.MetaKeywords, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MetaKeywords)
+            </div>
+
+            <div class="form-group">
+                <label>Meta Description</label>
+                @Html.TextBoxFor(model => model.MetaDescriptions, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MetaDescriptions)
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <div class="custom-control custom-switch">
+                            @Html.CheckBoxFor(model => model.ShowOnHome, new { @class = "custom-control-input", @id = "ShowOnHome" })
+                            <label class="custom-control-label" for="ShowOnHome">Hiển thị trên trang chủ</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="custom-control custom-switch">
+                            @Html.CheckBoxFor(model => model.Status, new { @class = "custom-control-input", @id = "Status" })
+                            <label class="custom-control-label" for="Status">Kích hoạt</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <center>
+                    <input type="submit" value="Hoàn thành" class="btn btn-primary" />
+                </center>
+            </div>
+        }
+    </div>
+</div>
