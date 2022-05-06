@@ -141,9 +141,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\PagedList.css" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{daddce2e-934b-4881-a511-9731670cf2e6}</Project>
       <Name>Common</Name>
