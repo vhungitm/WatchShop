@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Model.Dao;
 using Model.EF;
-using WatchShop.Common;
+using Common;
+using WatchShop.Utils;
+
 namespace WatchShop.Areas.Admin.Controllers
 {
     public class ContentController : BaseController
@@ -20,20 +19,21 @@ namespace WatchShop.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [HasCredential(RoleID = "ADD_CONTACT")]
+        [HasCredential(RoleID = "ADD_CONTENT")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [HasCredential(RoleID = "ADD_CONTACT")]
+        [HasCredential(RoleID = "ADD_CONTENT")]
         public ActionResult Create(Content Entity)
         {
             if (ModelState.IsValid)
             {
-                Entity.CreatedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người tạo
-                Entity.CreatedDate = DateTime.Now;  // Thời gian tạo
+                Entity.CreatedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString();
+                Entity.CreatedDate = DateTime.Now;
+                Entity.MetaTitle = StringFormat.formatToLink(Entity.Name);
 
                 var dao = new ContentDao();
                 if (dao.Insert(Entity))
@@ -50,7 +50,7 @@ namespace WatchShop.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [HasCredential(RoleID = "EDIT_CONTACT")]
+        [HasCredential(RoleID = "EDIT_CONTENT")]
         public ActionResult Edit(long id)
         {
             var dao = new ContentDao();
@@ -63,13 +63,14 @@ namespace WatchShop.Areas.Admin.Controllers
             else return Redirect("/404/Index.html");
         }
         [HttpPost]
-        [HasCredential(RoleID = "EDIT_CONTACT")]
+        [HasCredential(RoleID = "EDIT_CONTENT")]
         public ActionResult Edit(Content Entity)
         {
             if (ModelState.IsValid)
             {
-                Entity.ModifiedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString(); // Người cập nhật
-                Entity.ModifiedDate = DateTime.Now; // Thời gian cập nhật
+                Entity.ModifiedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString();
+                Entity.ModifiedDate = DateTime.Now;
+                Entity.MetaTitle = StringFormat.formatToLink(Entity.Name);
 
                 var dao = new ContentDao();
                 if (dao.Update(Entity))
@@ -85,7 +86,7 @@ namespace WatchShop.Areas.Admin.Controllers
             return View();
         }
 
-        [HasCredential(RoleID = "DELETE_CONTACT")]
+        [HasCredential(RoleID = "DELETE_CONTENT")]
         public ActionResult Delete(long id)
         {
             var dao = new ContentDao();

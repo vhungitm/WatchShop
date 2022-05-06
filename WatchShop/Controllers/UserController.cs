@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using WatchShop.Models;
+using Model;
 using Model.EF;
 using Model.Dao;
-using BotDetect.Web.Mvc;
-using WatchShop.Common;
 using Facebook;
 using System.Configuration;
+using Common;
+
 namespace WatchShop.Controllers
 {
     public class UserController : Controller
@@ -33,25 +30,29 @@ namespace WatchShop.Controllers
         }
 
         [HttpPost]
-        [CaptchaValidation("CaptchaCode", "registerCaptcha", "Mã xác nhận không đúng!")]
         public ActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
                 var dao = new UserDao();
-                if (dao.CheckUsername(model.Username))
+                model.Username = model.Email;
+
+                if (dao.CheckUsername(model.Phone))
                 {
-                    ModelState.AddModelError("", "Tên đăng nhập đã tồn tại");
+                    ViewBag.Error = "Số điện thoại đã tồn tại";
                 }
                 else if (dao.CheckEmail(model.Email))
                 {
-                    ModelState.AddModelError("", "Email đã tồn tại");
+                    ViewBag.Error = "Email đã tồn tại";
                 }
                 else
                 {
+                    var MemberGroupId = new UserGroupDao().FindByID("MEMBER").ID;
+
                     var user = new User();
                     user.Username = model.Username;
-                    user.Password = Common.Encryptor.MD5Hash(model.Password);
+                    user.Password = Encryptor.MD5Hash(model.Password);
+                    user.GroupID = MemberGroupId;
                     user.Name = model.Name;
                     user.Phone = model.Phone;
                     user.Email = model.Email;
@@ -62,11 +63,10 @@ namespace WatchShop.Controllers
                     if (dao.Insert(user))
                     {
                         ViewBag.Success = "Đăng ký thành công!";
-                        model = new RegisterModel();
                     }
                     else
                     {
-                        ModelState.AddModelError("","Đăng ký không thành công!");
+                        ViewBag.Error = "Đăng ký không thành công!";
                     }
                 }
             }
@@ -80,41 +80,30 @@ namespace WatchShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginModel model)
+        public ActionResult Login(Login model)
         {
             if (ModelState.IsValid)
             {
+                model.GroupID = CommonConstants.MEMBER_GROUP;
+
                 var dao = new UserDao();
-                var result = dao.Login(model.Username, Encryptor.MD5Hash(model.Password));
-                if (result == 0)
-                {
-                    ModelState.AddModelError("", "Tài khoản không tồn tại!");
-                }
-                else if (result == 1)
+                var result = dao.Login(model);
+
+                if (result.Status)
                 {
                     var user = new UserDao().GetByUsername(model.Username);
-                    var userSession = new UserLogin();
-
-                    userSession.UserID = user.ID;
-                    userSession.Username = user.Username;
-                    userSession.Name = user.Name;
-                    userSession.GroupID = user.GroupID;
-
-                    var listCredentials = dao.GetListCredential(model.Username);
+                    var listCredentials = dao.GetListCredential(user.Username);
                     Session.Add(CommonConstants.SESSION_CREDENTIALS, listCredentials);
-                    Session.Add(CommonConstants.USER_SESSION, userSession);
-                    return Redirect("/");
+                    Session.Add(CommonConstants.USER_SESSION, user);
+
+                    return RedirectToAction("Index", "Home");
                 }
-                else if (result == -1)
+                else
                 {
-                    ModelState.AddModelError("", "Tài khoản này đang bị khóa!");
-                }
-                else if (result == -2)
-                {
-                    ModelState.AddModelError("", "Sai mật khẩu!");
+                    ModelState.AddModelError("", result.Message);
                 }
             }
-            return View(model);
+            return View();
         }
 
         public ActionResult Logout()
@@ -170,13 +159,7 @@ namespace WatchShop.Controllers
                 
                 var resultInsertUser = new UserDao().InsertForFaceBook(user);
 
-                var userSession = new UserLogin();
-
-                userSession.UserID = user.ID;
-                userSession.Username = user.Username;
-                userSession.Name = user.Name;
-
-                Session.Add(CommonConstants.USER_SESSION, userSession);
+                Session.Add(CommonConstants.USER_SESSION, user);
             }
             return Redirect("/");
         }

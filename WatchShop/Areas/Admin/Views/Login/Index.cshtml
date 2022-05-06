@@ -1,76 +1,95 @@
-﻿@{
-    Layout = null;
+﻿@model Model.Login
+@{
+    ViewBag.Title = "Đăng nhập trang quản trị";
 }
-@model WatchShop.Areas.Admin.Models.LoginModel
-<!DOCTYPE html>
-<html lang="en">
+
+<!DOCTYPE HTML>
+<html lang="vi">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Đăng nhập</title>
-    <!-- Custom fonts for this template-->
-    <link href="/Assets/Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <!-- Custom styles for this template-->
-    <link href="/Assets/Admin/css/sb-admin-2.css" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="~/Assets/Admin/img/clock.ico" />
+    <meta charset="utf-8" />
+    <title>WatchShop - Đăng nhập trang quản trị</title>
+
+    <!-- Icon -->
+    <link rel="icon" href="~/Images/watch-icon.png" type="image/gif" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/CSS/bootstrap.css" />
+    <link rel="stylesheet" href="~/CSS/style.css" />
+    <link rel="stylesheet" href="~/Fontawesome/css/all.min.css" />
+
 </head>
-<body class="bg-gradient-primary">
-    <div class="container">
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
+<body>
+    <div class="bg-light">
+        <div class="container">
+            <div class="p-5">
+                <div class="card shadow border-0 m-5 o-hidden">
                     <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                            <div class="col-lg-6" style="height: 577px">
+                        <div class="row g-0">
+                            <div class="col-lg-6 d-none d-lg-block" style="background: url(/Images/watch-background.jpg); background-position: center; background-size: cover;">
+                            </div>
+                            <div class="col-lg-6">
                                 <div class="p-5">
-                                    <div class="text-center">
-                                        <div style="height: 60px"></div>
-                                        <h1 class="h4 text-gray-900 mb-4">Đăng Nhập</h1>
+                                    <div class="bg-white border-0 pt-5">
+                                        <h6 class="text-center fw-bold">ĐĂNG NHẬP</h6>
                                     </div>
-                                    @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "user" }))
-                                    {
-                                        @Html.ValidationSummary(true)
-                                        <div class="form-group">
-                                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control form-control-user", @placeholder = "Username" })
-                                            @Html.ValidationMessageFor(model => model.Username)
+                                    <div class="mx-auto pb-5">
+                                        <div class="text-center mb-5 mt-3">
+                                            <img src="~/Images/no-avatar.png" alt="user" class="rounded-circle" />
                                         </div>
-                                        <div class="form-group">
-                                            @Html.TextBoxFor(model => model.Password, new { @class = "form-control form-control-user", @type = "Password", @placeholder = "Password" })
-                                            @Html.ValidationMessageFor(model => model.Password)
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                @Html.CheckBoxFor(model => model.RememberMe, new { @class = "custom-control-input", id = "customCheck" })
-                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                        @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.ValidationSummary(false, "")
+
+                                            if (ViewBag.Success != null)
+                                            {
+                                                <div class="alert alert-primary">@ViewBag.Success</div>
+                                            }
+
+                                            <div class="form-group">
+                                                <label>
+                                                    <i class="fas fa-user me-2"></i>
+                                                    Tài khoản
+                                                </label>
+                                                @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Tài khoản" })
                                             </div>
-                                        </div>
-                                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Đăng nhập">
-                                        <hr>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Đăng nhập bằng Facebook
-                                        </a>
-                                    }
+                                            <div class="form-group">
+                                                <label>
+                                                    <i class="fas fa-lock me-2"></i>
+                                                    Mật khẩu
+                                                </label>
+                                                @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @placeholder = "Mật khẩu", @type = "password" })
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="Remember">
+                                                    <label class="form-check-label" for="Remember">
+                                                        Nhớ tài khoản
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <button class="btn btn-primary btn-block text-center mb-3">
+                                                        <i class="fas fa-sign-in me-2"></i>Đăng nhập
+                                                    </button>
+
+                                                    <a href="/User/LoginFacebook" class="btn btn-block btn-primary text-center">
+                                                        <i class="fa-brands fa-facebook me-2"></i>Đăng nhập bằng Facebook
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
-    <!-- Bootstrap core JavaScript-->
-    <script src="/Assets/Admin/vendor/jquery/jquery.min.js"></script>
-    <script src="/Assets/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="/Assets/Admin/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Custom scripts for all pages-->
-    <script src="/Assets/Admin/js/sb-admin-2.min.js"></script>
+    <script src="~/JS/bootstrap.bundle.js"></script>
 </body>
 </html>

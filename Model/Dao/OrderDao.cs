@@ -29,36 +29,40 @@ namespace Model.Dao
 
         public IQueryable<OrderViewModel> ListAll()
         {
-            var Order = from order in db.Orders
-                        join orderDetail in db.OrderDetails on order.ID equals orderDetail.OrderID
-                        join product in db.Products on orderDetail.ProductID equals product.ID
-                        select new
-                        {
-                            OrderID = order.ID,
-                            CustomerName = order.ShipName,
-                            ProductID = orderDetail.ProductID,
-                            Quantity = orderDetail.Quantity,
-                            Price = orderDetail.Price,
-                            CreatedDate = order.CreatedDate,
-                            Status = order.Status,
-                        };
+            var Order =
+                from order in db.Orders
+                join orderDetail in db.OrderDetails on order.ID equals orderDetail.OrderID
+                join product in db.Products on orderDetail.ProductID equals product.ID
+                select new
+                {
+                    OrderID = order.ID,
+                    CustomerName = order.ShipName,
+                    ProductID = orderDetail.ProductID,
+                    Quantity = orderDetail.Quantity,
+                    Price = orderDetail.Price,
+                    CreatedDate = order.CreatedDate,
+                    Status = order.Status,
+                };
 
-            var Entity = from kq in Order
-                         group kq by kq.OrderID into g
-                         select new OrderViewModel
-                         {
-                             OrderID = g.Key,
-                             CustomerName = (from gg in g select gg.CustomerName).FirstOrDefault(),
-                             Products = (from product in db.Products join gg in g on product.ID equals gg.ProductID select new ProductViewModel { ID = gg.ProductID, Name = product.Name, Quantity = gg.Quantity, Price = gg.Price }).ToList(),
-                             PriceTotal = g.Sum(x => x.Price),
-                             CreatedDate = (DateTime)(from gg in g select gg.CreatedDate).FirstOrDefault(),
-                             Status = (from gg in g select gg.Status).FirstOrDefault(),
-                         };
+            var Entity =
+                from kq in Order
+                group kq by kq.OrderID into g
+                select new OrderViewModel
+                {
+                    OrderID = g.Key,
+                    CustomerName = (from gg in g select gg.CustomerName).FirstOrDefault(),
+                    Products = (from product in db.Products join gg in g on product.ID equals gg.ProductID select new ProductViewModel { ID = gg.ProductID, Name = product.Name, Image = product.Image, Quantity = gg.Quantity, Price = gg.Price }).ToList(),
+                    PriceTotal = g.Sum(x => x.Price),
+                    CreatedDate = (DateTime)(from gg in g select gg.CreatedDate).FirstOrDefault(),
+                    Status = (from gg in g select gg.Status).FirstOrDefault(),
+                };
+
             return Entity;
         }
-        public List<OrderViewModel> ListAllPaging(string searchString, ref int totalRecord, int page, int pageSize)
+        public IEnumerable<OrderViewModel> ListAllPaging(string searchString, int page, int pageSize)
         {
             var Entity = ListAll();
+
             if (searchString == "Chưa thanh toán")
             {
                 Entity = Entity.Where(x => x.Status == false);
@@ -67,8 +71,8 @@ namespace Model.Dao
             {
                 Entity = Entity.Where(x => x.Status == true);
             }
-            totalRecord = Entity.Count();
-            return Entity.OrderBy(x => x.OrderID).Skip((page - 1) * pageSize).Take(pageSize).ToList();                                   
+
+            return Entity.OrderBy(x => x.OrderID).ToPagedList(page,pageSize);                                   
         }
         
         public enum FilterType{

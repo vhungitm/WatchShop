@@ -1,14 +1,11 @@
 ﻿using Model.Dao;
-using WatchShop.Models;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Model.EF;
-using System.Configuration;
-using System.IO;
 using Common;
 
 namespace WatchShop.Controllers
@@ -143,13 +140,24 @@ namespace WatchShop.Controllers
         [HttpGet]
         public ActionResult Payment()
         {
+            var user = Session[CommonConstants.USER_SESSION];
             var cart = Session[CartSession];
-            var list = new List<CartItem>();
+
             if (cart != null)
             {
-                list = (List<CartItem>)cart;
+                if (user == null)
+                {
+                    return RedirectToAction("Login", "User");
+                }
+                else
+                {
+                    var list = (List<CartItem>)cart;
+
+                    return View(list);
+                }    
             }
-            return View(list);
+
+            return Redirect("/404");
         }
 
         [HttpPost]
@@ -164,9 +172,9 @@ namespace WatchShop.Controllers
             order.ShipName = shipName;
             order.ShipEmail = email;
 
-            var session = (Common.UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            var session = (User)Session[Common.CommonConstants.USER_SESSION];
             if (session != null)
-                order.CustomerID = session.UserID;
+                order.CustomerID = session.ID;
             try
             {
                 var id = new OrderDao().Insert(order);
@@ -188,19 +196,10 @@ namespace WatchShop.Controllers
                     detailDao.Insert(orderDetail);
                     total += orderDetail.Price;
                 }
-                string content = System.IO.File.ReadAllText(Server.MapPath("~/Assets/template/neworder.html"));
 
-                content = content.Replace("{{CustomerName}}", shipName);
-                content = content.Replace("{{Phone}}", mobile);
-                content = content.Replace("{{Email}}", email);
-                content = content.Replace("{{Address}}", address);
-                content = content.Replace("{{Total}}", total.ToString("N0"));
-                var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"].ToString();
-
-                new MailHelper().SendMail(email, "Đơn hàng mới từ OnlineShop", content);
-                new MailHelper().SendMail(toEmail, "Đơn hàng mới từ OnlineShop", content);
+                Session[CartSession] = null;
             }
-            catch (Exception ex)
+            catch
             {
 
                 return Redirect("/loi-thanh-toan");

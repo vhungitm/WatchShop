@@ -1,0 +1,100 @@
+﻿@model Model.EF.Product
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="product_image_area section_padding">
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-5">
+                <div class="product_slider_img">
+                    <div class="lSSlideOuter">
+                        <div class="lSSlideWrapper usingCss">
+                            <div id="vertical" class="lightSlider lsGrab lSSlide" style="width: 2760px; height: 580px; padding-bottom: 0%; transform: translate3d(0px, 0px, 0px);">
+                                <div data-thumb="@Model.Image" class="lslide active" style="width: 690px; margin-right: 0px;">
+                                    <img src="@Model.Image">
+                                </div>
+
+                            </div><div class="lSAction"><a class="lSPrev"></a><a class="lSNext"></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    <h3>@Model.Name</h3>
+                    @if (Model.PromotionPrice == 0)
+                    {
+                        <h2>@Model.Price.ToString("N0")</h2>
+                    }
+                    else
+                    {
+                        <h2>@(Model.PromotionPrice.ToString("N0"))đ <strike style="font-weight: 200; font-size: 18px">@(Model.Price.ToString("N0"))đ</strike></h2>
+                    }
+
+
+
+                    <ul class="list">
+                        <li>
+                            <a class="active" href="#">
+                                <span>Thương hiệu</span> : @ViewBag.CategoryName
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <span>Số lượng</span> : @Model.Quantity.ToString("N0") Chiếc
+                            </a>
+                        </li>
+                        @if (@Model.Warranty != null)
+                        {
+                            <li>
+                                <a>
+                                    <span>Bảo hành</span> : @Model.Warranty Tháng
+                                </a>
+                            </li>
+                        }
+                        
+                    </ul>
+                    <p>
+                        @Model.Description
+                    </p>
+                    <div class="card_area">
+                        <form action="/Them-gio-hang" method="get">
+                            <input style="display: none" name="productid" id="productid" value="@Model.ID"/>
+                            <div class="product_count d-inline-block">
+                                <span class="inumber-decrement"> <i class="ti-minus"></i></span>
+                                <input name ="quantity" id ="quantity"class="input-number" type="text" value="1" min="0" max="10">
+                                <span class="number-increment"> <i class="ti-plus"></i></span>
+                            </div>
+                            <div class="add_to_cart">
+
+                                <button id="addCart" class="btn_3">Thêm vào giỏ</button>
+                                <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
+                            </div>
+                        </form>
+                        <div class="social_icon">
+                            <a href="#" class="fb"><i class="ti-facebook"></i></a>
+                            <a href="#" class="tw"><i class="ti-twitter-alt"></i></a>
+                            <a href="#" class="li"><i class="ti-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="product_description_area">
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Chi tiết</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+                @Html.Raw(Model.Detail)
+            </div>
+        </div>
+    </div>
+</section>

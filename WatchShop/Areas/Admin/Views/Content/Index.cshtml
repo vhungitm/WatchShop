@@ -8,98 +8,127 @@
     Tin tức
 }
 @section jsFooter{
-    <script src="/Assets/Admin/js/controller/contentController.js"></script>
+    <script src="~/JS/Admin/contentController.js"></script>
 }
-<!-- DataTales Example -->
+
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <span class="m-0 font-weight-bold text-primary">
-            Danh sách
-            <span style="float: right">
-
-                <a href="/admin/Content/create" class="btn btn-primary btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                    <span class="text">Thêm mới</span>
-                </a>
-
-            </span>
-        </span>
-
+        <h6 class="m-0 fw-bold text-primary">
+            Danh Sách
+        </h6>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive p-2">
+            <a href="/admin/Content/Create" class="btn btn-primary btn-icon-split mb-3">
+                <span class="icon text-white-50">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">Thêm mới</span>
+            </a>
 
             @using (Html.BeginForm("Index", "Content", FormMethod.Get))
             {
-                <div style="padding: 3px; margin-bottom: 20px; width: 24.5rem">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tên tin tức" name="searchString" value="@ViewBag.SearchString">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Tên tin tức" name="searchString" value="@ViewBag.SearchString">
+                    <button class="btn btn-icon-split btn-primary" type="submit">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-search fa-sm"></i>
+                        </span>
+                        <span class="text">Tìm kiếm</span>
+                    </button>
                 </div>
             }
 
+            @if (Model.Count > 0)
+            {
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr align="center">
+                            <th>Tên</th>
+                            <th>Top Hot</th>
+                            <th>Trạng thái</th>
+                            <th>Công cụ</th>
+                        </tr>
+                    </thead>
 
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="align-middle">
+                                <td align="center">
+                                    <div class="d-flex">
+                                        <img src="@item.Image" width="60" height="60" alt="@item.Name" class="rounded me-2" />
+                                        <span class="my-auto">
+                                            @item.Name
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>@(item.TopHot != null ? item.TopHot.Value.ToString("dd/MM/yyyy") : "Không")</td>
+                                <td>
+                                    <div class="form-check form-switch ckb-status" data-id="@item.ID">
+                                        <input @(item.Status ? "checked" : null) class="form-check-input" type="checkbox" role="switch" id="ckbStatus-@item.ID">
+                                        <label class="form-check-label" for="ckbStatus-@item.ID">@(item.Status == true ? "Kích hoạt" : "Khóa")</label>
+                                    </div>
+                                </td>
 
+                                <td align="center">
+                                    <a href="/Admin/Content/Edit/@item.ID" class="btn btn-primary btn-circle btn-sm" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/Admin/Content/Delete/@item.ID" class="btn btn-danger btn-circle btn-sm" title="Xóa" data-bs-toggle="modal" data-bs-target="#deleteEntity-@item.ID">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
 
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Tên</th>
-                        <th>Mô tả</th>
-                        <th>Top Hot</th>
-                        <th>Trạng thái</th>
-                        <th style="text-align: center">Controls</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@(item.Description != null ? item.Description : "Không có")</td>
-                            <td>@(item.TopHot != null ? item.TopHot.Value.ToString("dd/MM/yyyy") : "Tắt")</td>
-                            <td><a href="#" data-id="@item.ID" class="btn-active">@(item.Status == true ? "Kích hoạt" : "Khóa")</a></td>
-                            
-                            <td align="center">
-                                <a href="/Admin/Content/Edit/@item.ID" class="btn btn-primary btn-circle btn-sm" title="Sửa">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="/Admin/Content/Delete/@item.ID" class="btn btn-danger btn-circle btn-sm" title="Xóa" data-toggle="modal" data-target="#deleteEntity-@item.ID">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-
-                                <div class="modal fade" id="deleteEntity-@item.ID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Xóa Tin Tức</h5>
-                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">Xóa tin tức này khỏi CSDL?</div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                                                <a class="btn btn-primary" href="/Admin/Content/Delete/@item.ID">Xóa</a>
+                                    <div class="modal fade" id="deleteEntity-@item.ID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-start">Xóa tin tức này khỏi CSDL?</div>
+                                                <div class="modal-footer p-2">
+                                                    <button class="btn btn-icon-split btn-secondary btn-sm" data-bs-dismiss="modal">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-times fa-sm"></i>
+                                                        </span>
+                                                        <span class="text">Hủy</span>
+                                                    </button>
+                                                    <a class="btn btn-icon-split btn-danger btn-sm" href="/Admin/Content/Delete/@item.ID">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-trash fa-sm"></i>
+                                                        </span>
+                                                        <span class="text">Xóa</span>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    }
+                                </td>
+                            </tr>
+                        }
 
-                </tbody>
-            </table>
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+                    </tbody>
+                </table>
+                if (Model.PageCount > 1)
+                {
+                    <div class="mb-2 text-center">Trang @Model.PageNumber / @Model.PageCount</div>
+
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }), new PagedListRenderOptions
+                    {
+                       MaximumPageNumbersToDisplay = 5,
+                       ContainerDivClasses = new string[] { "pagination-container d-flex justify-content-center" },
+                       UlElementClasses = new string[] { "pagination mb-0" },
+                       DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                       DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                       LinkToPreviousPageFormat = "Trước",
+                       LinkToNextPageFormat = "Sau",
+                       LinkToFirstPageFormat = "Đầu",
+                       LinkToLastPageFormat = "Cuối"
+                    })
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger mb-0">Không có dữ liệu</div>
+            }
         </div>
     </div>
 </div>

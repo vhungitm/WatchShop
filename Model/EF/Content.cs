@@ -1,4 +1,4 @@
-namespace Model.EF
+﻿namespace Model.EF
 {
     using System;
     using System.Collections.Generic;
@@ -12,11 +12,10 @@ namespace Model.EF
     {
         public long ID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Vui lòng nhập tên tin tức!")]
         [StringLength(250)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(250)]
         public string MetaTitle { get; set; }
 
@@ -26,6 +25,7 @@ namespace Model.EF
         [StringLength(250)]
         public string Image { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập nội dung!")]
         [Column(TypeName = "ntext")]
         [AllowHtml]
         public string Detail { get; set; }

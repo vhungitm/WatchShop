@@ -1,34 +1,31 @@
 ﻿@model Model.EF.Feedback
 @{
-    ViewBag.Title = "Chi Tiết Phản Hồi";
+    ViewBag.Title = "Chi tiết phản hồi";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 @section Header{
     Phản hồi
 }
 @section jsFooter{
-    <script src="/Assets/Admin/js/controller/feedbackController.js"></script>
+    <script src="~/JS/Admin/feedbackController.js"></script>
 }
-<!-- DataTales Example -->
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <span class="m-0 font-weight-bold text-primary">
-            Chi Tiết
-        </span>
-
+        <h6 class="m-0 fw-bold text-primary">Chi Tiết Phản Hồi</h6>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
+    <div class="card-body pb-0">
+        <div class="table-responsive px-2">
             <p>Họ tên: @Model.Name</p>
             <p>Số điện thoại: @Model.Phone</p>
             <p>Địa chỉ: @Model.Address</p>
             <p>Email: @Model.Email</p>
             <p>Nội dung phản hồi:</p>
-            <p>@Html.Raw(Model.Content)</p>
-            <p>Trạng thái: 
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class = "custom-control-input" id = "Status" checked="@Model.Status" data-id="@Model.ID"/>
-                    <label class="custom-control-label" for="Status">Đã xem</label>
+            <p class="alert alert-primary">@Html.Raw(Model.Content)</p>
+            <p>
+                <div class="form-check form-switch ckb-status" data-id="@Model.ID">
+                    <input @(Model.Status ? "checked" : null) class="form-check-input" type="checkbox" role="switch" id="ckbStatus-@Model.ID">
+                    <label class="form-check-label" for="ckbStatus-@Model.ID">@(Model.Status == true ? "Đã xem" : "Chưa xem")</label>
                 </div>
             </p>
         </div>

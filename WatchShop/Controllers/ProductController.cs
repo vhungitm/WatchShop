@@ -10,14 +10,14 @@ namespace WatchShop.Controllers
 {
     public class ProductController : Controller
     {
-        //
         // GET: /Product/
-        public ActionResult Index()
+        public ActionResult Index(int page = 1, int pageSize = 10)
         {
-            return View();
+            var result = new ProductDao().ListAllPaging("", page, pageSize, 1);
+
+            return View(result);
         }
 
-        [ChildActionOnly]
         public PartialViewResult ProductCategoryMenu()
         {
             var model = new ProductCategoryDao().ListAll();
@@ -34,11 +34,10 @@ namespace WatchShop.Controllers
             return View(model);
         }
 
-        [OutputCache(CacheProfile = "Cache1DayForProduct")]
         public ActionResult Detail(long id)
         {
             var result = new ProductDao().GetByID(id);
-            @ViewBag.CategoryName = new ProductCategoryDao().GetByID(result.CategoryID).Name;
+            @ViewBag.Category = new ProductCategoryDao().GetByID(result.CategoryID);
             return View(result);
         }
 
@@ -47,31 +46,21 @@ namespace WatchShop.Controllers
             var data = new ProductDao().ListName(q);
             return Json(new
             {
-
                 data = data,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult Search(string keyword, int page = 1, int pageSize = 1)
+        public ActionResult Search(string keyword, int page = 1, int pageSize = 10)
         {
-            int totalRecord = 0;
-            var model = new ProductDao().Search(keyword, ref totalRecord, page, pageSize);
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var model = new ProductDao().ListAllPaging(keyword, page, pageSize);
 
-            ViewBag.Total = totalRecord;
-            ViewBag.Page = page;
-            ViewBag.Keyword = keyword;
-            int maxPage = 5;
-            int totalPage = 0;
+                ViewBag.Keyword = keyword;
+                return View(model);
+            }
 
-            totalPage = (int)Math.Ceiling((double)(totalRecord / pageSize));
-            ViewBag.TotalPage = totalPage;
-            ViewBag.MaxPage = maxPage;
-            ViewBag.First = 1;
-            ViewBag.Last = totalPage;
-            ViewBag.Next = page + 1;
-            ViewBag.Prev = page - 1;
-
-            return View(model);
+            return View();
         }
 	}
 }

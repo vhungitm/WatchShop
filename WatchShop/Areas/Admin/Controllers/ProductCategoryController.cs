@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Model.Dao;
 using Model.EF;
-using WatchShop.Common;
+using WatchShop.Utils;
+using Common;
+
 namespace WatchShop.Areas.Admin.Controllers
 {
     public class ProductCategoryController : BaseController
@@ -16,6 +16,7 @@ namespace WatchShop.Areas.Admin.Controllers
             var dao = new ProductCategoryDao();
             var result = dao.ListAllPaging(searchString, page, pageSize);
             ViewBag.searchString = searchString;
+
             return View(result);
         }
 
@@ -23,18 +24,20 @@ namespace WatchShop.Areas.Admin.Controllers
         [HasCredential(RoleID = "ADD_PRODUCT_CATEGORY")]
         public ActionResult Create()
         {
+            SetViewBag();
             return View();
         }
         [HttpPost]
         [HasCredential(RoleID = "ADD_PRODUCT_CATEGORY")]
         public ActionResult Create(ProductCategory Entity)
         {
-            if (ModelState.IsValid)
-            {
-                Entity.CreatedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người tạo
-                Entity.CreatedDate = DateTime.Now;  // Thời gian tạo
+            SetViewBag(Entity.ID, Entity.ParentID);
 
+            if (ModelState.IsValid)
+            {                
                 var dao = new ProductCategoryDao();
+
+                Entity.MetaTitle = StringFormat.formatToLink(Entity.Name);
                 if (dao.Insert(Entity))
                 {
                     SetAlert("Thêm mới danh mục sản phẩm thành công!", AlertType.Success);
@@ -45,6 +48,7 @@ namespace WatchShop.Areas.Admin.Controllers
                     SetAlert("Thêm mới danh mục sản phẩm không thành công!", AlertType.Error);
                 }
             }
+
             return View();
         }
 
@@ -57,6 +61,7 @@ namespace WatchShop.Areas.Admin.Controllers
 
             if (result != null)
             {
+                SetViewBag(result.ID, result.ParentID);
                 return View(result);
             }
             else return Redirect("/404/Index.html");
@@ -66,12 +71,16 @@ namespace WatchShop.Areas.Admin.Controllers
         [HasCredential(RoleID = "EDIT_PRODUCT_CATEGORY")]
         public ActionResult Edit(ProductCategory Entity)
         {
+            SetViewBag(Entity.ID, Entity.ParentID);
+
             if (ModelState.IsValid)
             {
-                Entity.ModifiedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString(); // Người cập nhật
-                Entity.ModifiedDate = DateTime.Now; // Thời gian cập nhật
-
                 var dao = new ProductCategoryDao();
+
+                Entity.ModifiedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString(); // Người cập nhật
+                Entity.ModifiedDate = DateTime.Now; // Thời gian cập nhật
+                Entity.MetaTitle = StringFormat.formatToLink(Entity.Name);
+
                 if (dao.Update(Entity))
                 {
                     SetAlert("Cập nhật danh mục sản phẩm thành công!", AlertType.Success);
@@ -82,6 +91,7 @@ namespace WatchShop.Areas.Admin.Controllers
                     SetAlert("Cập nhật danh mục sản phẩm không thành công!", AlertType.Error);
                 }
             }
+
             return View();
         }
 
@@ -98,6 +108,23 @@ namespace WatchShop.Areas.Admin.Controllers
             {
                 return Redirect("/404/Index.html");
             }
+        }
+
+        public void SetViewBag(long? id = null, long? selectedId = null)
+        {
+            var dao = new ProductCategoryDao();
+            var categories = dao.ListAll();
+            var firstCategory = new ProductCategory();
+
+            firstCategory.Name = "Chọn danh mục cấp trên";
+            categories.Insert(0, firstCategory);
+
+            if (id != null)
+            {
+                categories = categories.Where(x => x.ID != id).ToList();
+            }
+
+            ViewBag.ParentID = new SelectList(categories, "ID", "Name", selectedId);
         }
 
         [HttpPost]

@@ -35,38 +35,28 @@ namespace Model.Dao
             return db.Products.Where(x => x.Name.Contains(keyword)).Select(x => x.Name).ToList();
         }
 
-        public List<ProductViewModel> Search(string keyword, ref int totalRecord, int pageIndex = 1, int pageSize = 2)
+        public IEnumerable<ProductViewModel> ListAll()
         {
-            totalRecord = db.Products.Where(x => x.Name == keyword).Count();
-            var model = (from a in db.Products
-                         join b in db.ProductCategories
-                         on a.CategoryID equals b.ID
-                         where a.Name.Contains(keyword)
-                         select new
-                         {
-                             CateMetaTitle = b.MetaTitle,
-                             CateName = b.Name,
-                             CreatedDate = a.CreatedDate,
-                             ID = a.ID,
-                             Images = a.Image,
-                             Name = a.Name,
-                             MetaTitle = a.MetaTitle,
-                             Price = a.Price,
-                             PromotionPrice = a.PromotionPrice
-                         }).AsEnumerable().Select(x => new ProductViewModel()
-                         {
-                             CateMetaTitle = x.MetaTitle,
-                             CateName = x.Name,
-                             CreatedDate = x.CreatedDate,
-                             ID = x.ID,
-                             Images = x.Images,
-                             Name = x.Name,
-                             MetaTitle = x.MetaTitle,
-                             Price = x.Price,
-                             PromotionPrice = x.PromotionPrice
-                         });
-            model.OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize);
-            return model.ToList();
+            var model =
+                from a in db.Products
+                join b in db.ProductCategories
+                on a.CategoryID equals b.ID
+                select new ProductViewModel
+                {
+                    ID = a.ID,
+                    Name = a.Name,
+                    MetaTitle = a.MetaTitle,
+                    Image = a.Image,
+                    CateMetaTitle = b.MetaTitle,
+                    CateName = b.Name,
+                    CreatedDate = a.CreatedDate,
+                    Price = a.Price,
+                    PromotionPrice = a.PromotionPrice,
+                    TopHot = a.TopHot,
+                    Status = a.Status
+                };
+
+            return model.OrderByDescending(x => x.CreatedDate);
         }
 
         public List<Product> ListNewProduct(int top)
@@ -80,14 +70,19 @@ namespace Model.Dao
         }
 
         // Get danh sách danh mục có phân trang
-        public IEnumerable<Product> ListAllPaging(string searchString, int page, int pageSize)
+        public IEnumerable<ProductViewModel> ListAllPaging(string searchString, int page, int pageSize, int? status = null)
         {
-            IQueryable<Product> Entity = db.Products;
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                Entity = Entity.Where(x => x.Name.Contains(searchString));
-            }
-            return Entity.OrderByDescending(x => x.CreatedDate).ToPagedList(page, pageSize);
+            var Entities = 
+                ListAll().Where(x =>
+                    (!string.IsNullOrEmpty(searchString) ? x.Name.Contains(searchString) : true) &&
+                    (status != null ? (
+                        (status == 1) ? (x.Status == true) : (
+                            (status == 0) ? (x.Status == false) : true)
+                        ) : true
+                    )
+                ).ToPagedList(page, pageSize);
+
+            return Entities;
         }
 
         //Thêm mới

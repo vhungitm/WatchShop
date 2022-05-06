@@ -18,7 +18,6 @@ namespace WatchShop.Controllers
             return View(model);
         }
 
-        [OutputCache(CacheProfile = "Cache1DayForContent")]
         public ActionResult Detail(long id)
         {
             var dao = new ContentDao();
@@ -34,7 +33,6 @@ namespace WatchShop.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 3600 * 24)]
         public PartialViewResult NavContent()
         {
             var dao = new ContentDao();

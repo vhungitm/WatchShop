@@ -13,14 +13,14 @@ namespace WatchShop.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            ViewBag.Infor = new ContactDao().ListAll();
+            ViewBag.Contact = new ContactDAO().GetContact();
             return View();
         }
 
         [HttpPost]
         public ActionResult Index(Feedback model)
         {
-            ViewBag.Infor = new ContactDao().ListAll();
+            ViewBag.Contact = new ContactDAO().GetContact();
             if (ModelState.IsValid)
             {
                 var dao = new FeedbackDao();

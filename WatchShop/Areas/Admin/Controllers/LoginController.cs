@@ -1,69 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using WatchShop.Areas.Admin.Models;
+﻿using System.Web.Mvc;
 using Model.Dao;
-using WatchShop.Common;
+using Model;
+using Common;
+using Model.EF;
 
 namespace WatchShop.Areas.Admin.Controllers
 {
     public class LoginController : Controller
     {
+        [HttpGet]
         public ActionResult Index()
         {
+            var user = (User)Session[CommonConstants.USER_SESSION];
+
+            if (user != null && user.GroupID == CommonConstants.ADMIN_GROUP)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
-        [HttpGet]
-        public ActionResult Login()
-        {
-            return View("Index");
-        }
+
         [HttpPost]
-        public ActionResult Login(LoginModel model)
+        public ActionResult Index(Login model)
         {
             if (ModelState.IsValid)
             {
+                model.GroupID = CommonConstants.ADMIN_GROUP;
+
                 var dao = new UserDao();
-                var result = dao.Login(model.Username, Encryptor.MD5Hash(model.Password), true);
-                if (result == 0)
-                {
-                    ModelState.AddModelError("", "Tài khoản không tồn tại!");
-                }
-                else if (result == 1)
+                var result = dao.Login(model);
+                
+                if (result.Status)
                 {
                     var user = new UserDao().GetByUsername(model.Username);
-                    var userSession = new UserLogin();
 
-                    userSession.UserID = user.ID;
-                    userSession.Username = user.Username;
-                    userSession.Name = user.Name;
-                    userSession.GroupID = user.GroupID;
-
-                    var listCredentials = dao.GetListCredential(model.Username);
+                    var listCredentials = dao.GetListCredential(user.Username);
                     Session.Add(CommonConstants.SESSION_CREDENTIALS, listCredentials);
-                    Session.Add(CommonConstants.USER_SESSION, userSession);
+                    Session.Add(CommonConstants.USER_SESSION, user);
+                    
                     return RedirectToAction("Index", "Home");
-                }
-                else if (result == -1)
-                {
-                    ModelState.AddModelError("", "Tài khoản này đang bị khóa!");
-                }
-                else if (result == -2)
-                {
-                    ModelState.AddModelError("", "Sai mật khẩu!");
-                }
-                else if (result == -3)
-                {
-                    ModelState.AddModelError("", "Không có quyền truy cập!");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Đăng nhập không đúng!");
+                    ModelState.AddModelError("", result.Message);
                 }
             }
-            return View("Index");
+
+            return View();
         }
         public ActionResult Logout()
         {

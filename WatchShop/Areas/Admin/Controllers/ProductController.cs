@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Model.Dao;
 using Model.EF;
-using WatchShop.Common;
+using Common;
+using WatchShop.Utils;
+
 namespace WatchShop.Areas.Admin.Controllers
 {
     public class ProductController : BaseController
@@ -34,8 +33,9 @@ namespace WatchShop.Areas.Admin.Controllers
             SetViewBag();
             if (ModelState.IsValid)
             {
-                Entity.CreatedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người tạo
+                Entity.CreatedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người tạo
                 Entity.CreatedDate = DateTime.Now;  // Thời gian tạo
+                Entity.MetaTitle = StringFormat.formatToLink(Entity.Name);
 
                 var dao = new ProductDao();
                 if (dao.Insert(Entity))
@@ -73,8 +73,9 @@ namespace WatchShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                Entity.ModifiedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString(); // Người cập nhật
-                Entity.ModifiedDate = DateTime.Now; // Thời gian cập nhật
+                Entity.ModifiedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString();
+                Entity.ModifiedDate = DateTime.Now;
+                Entity.MetaTitle = StringFormat.formatToLink(Entity.Name);
 
                 var dao = new ProductDao();
                 if (dao.Update(Entity))

@@ -18,5 +18,10 @@ namespace Model.Dao
         {
             return db.UserGroups.ToList();
         }
+
+        public UserGroup FindByID(string id)
+        {
+            return db.UserGroups.Find(id);
+        }
     }
 }

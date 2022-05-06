@@ -1,48 +1,99 @@
 ﻿@model List<Model.EF.Menu>
+@using Model
+@using Model.EF
 @{
-    var session = (WatchShop.Common.UserLogin)Session[WatchShop.Common.CommonConstants.USER_SESSION];
+    var session = (User)Session[Common.CommonConstants.USER_SESSION];
     var listProductCategory = (List<Model.EF.ProductCategory>)ViewBag.listProductCategory;
+    var cart = (List<CartItem>)Session["CartSession"];
+    var cartCount = cart != null ? cart.Count : 0;
 }
-<div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
-    <ul class="navbar-nav">
-        @foreach (var item in Model)
-        {
-            <li class="nav-item">
-                <a class="nav-link" href="@item.Link">@item.Text</a>
-            </li>
-        }
+<ul class="navbar-nav">
+    @foreach (var item in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@item.Link">@item.Text</a>
+        </li>
+    }
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="productCate"
-               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <li class="nav-item">
+        <div class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 Danh mục sản phẩm
             </a>
-            <div class="dropdown-menu" aria-labelledby="productCate">
+            <ul class="dropdown-menu">
                 @foreach (var item in listProductCategory)
                 {
                     <a class="dropdown-item" href="/San-pham/@item.MetaTitle-@item.ID"> @item.Name </a>
                 }
+            </ul>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/San-pham">Sản phẩm</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/Tim-kiem">
+            <i class="fas fa-search"></i>
+            <span class="ms-2">Tìm kiếm</span>
+        </a>
+    </li>
+</ul>
+<ul class="ms-auto navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link" href="/Gio-hang">
+            <span class="position-relative">
+                <img src="~/Images/cart.png" width="26" height="26" class="me-2" />
+                @if (cartCount > 0)
+                {
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
+                        @cartCount
+                        <span class="visually-hidden">Giỏ hàng</span>
+                    </span>
+                }
+            </span>
+            <span class="text">
+                Giỏ hàng
+            </span>
+        </a>
+    </li>
+    @if (session == null)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="/Dang-nhap">
+                <span class="icon">
+                    <i class="fas fa-sign-in"></i>
+                </span>
+                <span class="text">
+                    Đăng nhập
+                </span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Dang-ky">
+                <span class="icon">
+                    <i class="fas fa-pen-to-square"></i>
+                </span>
+                <span class="text">
+                    Đăng ký
+                </span>
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <span class="me-2 d-none d-lg-inline text-gray-600 small">@session.Name</span>
+                <img class="img-profile rounded-circle" src="/Images/no-avatar.png" width="26" height="26" alt="Avatar">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                    Đăng xuất
+                </a>
             </div>
         </li>
-
-        
-
-        @if (session == null)
-        {
-            <li class="nav-item">
-                <a class="nav-link" href="/Dang-nhap">Đăng nhập</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Dang-ky">Đăng ký</a>
-            </li>
-        }
-        else { 
-            <li class="nav-item">
-                <a class="nav-link" href="#">Xin chào: @session.Name!</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/User/Logout">Đăng xuất</a>
-            </li>
-        }
-    </ul>
-</div>
+    }
+</ul>

@@ -1,0 +1,34 @@
+﻿@model Model.EF.Content
+@{
+    ViewBag.Title = "Tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--================Blog Area =================-->
+<section class="blog_area single-post-area section_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 posts-list">
+                <div class="single-post">
+                    <div class="feature-img">
+                        <img class="img-fluid" src="@Model.Image" alt="@Model.Name" width="100%">
+                    </div>
+                    <div class="blog_details">
+                        <h2>
+                            @Model.Name
+                        </h2>
+                        <ul class="blog-info-link mt-3 mb-4">
+                            <li><a href="#"><i class="far fa-user"></i>@Model.CreatedBy</a></li>
+                        </ul>
+                        <p>
+                            @Html.Raw(Model.Detail)
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="blog_right_sidebar">
+                    @{Html.RenderAction("NavContent", "Content");}
+                </div>
+            </div>
+</section>

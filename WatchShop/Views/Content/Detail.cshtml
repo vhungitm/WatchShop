@@ -1,34 +1,38 @@
 ﻿@model Model.EF.Content
 @{
-    ViewBag.Title = "Tin tức";
+    ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!--================Blog Area =================-->
-<section class="blog_area single-post-area section_padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 posts-list">
-                <div class="single-post">
-                    <div class="feature-img">
-                        <img class="img-fluid" src="@Model.Image" alt="@Model.Name" width="100%">
-                    </div>
-                    <div class="blog_details">
-                        <h2>
+<div class="p-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow o-hidden">
+                <div style="background: url(@Model.Image); background-size: cover; background-position: 50%; height: 500px"></div>
+                <div class="card-body">
+                    <div>
+                        <h1 class="card-title text-center">
                             @Model.Name
-                        </h2>
-                        <ul class="blog-info-link mt-3 mb-4">
-                            <li><a href="#"><i class="far fa-user"></i>@Model.CreatedBy</a></li>
-                        </ul>
-                        <p>
-                            @Html.Raw(Model.Detail)
+                        </h1>
+                        <p class="card-text text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>@Model.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") -
+                                <i class="fas fa-user mx-1"></i>@Model.CreatedBy
+                            </small>
                         </p>
                     </div>
+                    <div class="mt-5 border-top pt-3" id="detail">
+                        @Html.Raw(Model.Detail)
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="blog_right_sidebar">
-                    @{Html.RenderAction("NavContent", "Content");}
-                </div>
             </div>
-</section>
+        <div class="col-lg-4">
+            @{Html.RenderAction("NavContent", "Content");}
+        </div>
+    </div>    
+</div>
+
+<script>
+    $('#detail img').attr('style', 'text-align: center; max-width: 100%');
+</script>

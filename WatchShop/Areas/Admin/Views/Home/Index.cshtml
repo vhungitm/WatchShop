@@ -1,7 +1,8 @@
-﻿@model Model.ViewModel.OrderViewModel
+﻿
+@model Model.ViewModel.OrderViewModel
 
 @{
-    ViewBag.Title = "Statistic";
+    ViewBag.Title = "Báo cáo thống kê";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var listTopProductByPrice = (List<Model.ViewModel.ProductViewModel>)ViewBag.listTopProductByPrice;
     var listTopProductByQuantity = (List<Model.ViewModel.ProductViewModel>)ViewBag.listTopProductByQuantity;
@@ -14,7 +15,7 @@
     Thống kê
 }
 @section jsFooter{
-    <script src="~/Assets/Admin/vendor/chart.js/Chart.js"></script>
+    <script src="~/JS/Chart.bundle.min.js"></script>
     <script>
         // Set new default font family and font color to mimic Bootstrap's default styling
         Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -158,12 +159,12 @@
 <div class="row">
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card border-0 border-start border-4 border-primary border-start shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Doanh Thu (Năm @Nam)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@(ViewBag.PriceTotalYear)</div>
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">Doanh Thu (Năm @Nam)</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@(ViewBag.PriceTotalYear)</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -174,12 +175,12 @@
     </div>
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
+        <div class="card  border-0 border-start border-4 border-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Doanh thu (Tháng @(Thang != null ? Thang : DateTime.Now.Month))</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.PriceTotalMonth</div>
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">Doanh thu (Tháng @(Thang != null ? Thang : DateTime.Now.Month))</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.PriceTotalMonth</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -190,12 +191,12 @@
     </div>
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
+        <div class="card  border-0 border-start border-4 border-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Đơn hàng (Tháng @(Thang != null ? Thang : DateTime.Now.Month))</div>
-                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@ViewBag.OrderQuantity</div>
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">Đơn hàng (Tháng @(Thang != null ? Thang : DateTime.Now.Month))</div>
+                        <div class="h5 mb-0 mr-3 fw-bold text-gray-800">@ViewBag.OrderQuantity</div>
                     </div>
                 <div class="col-auto">
                     <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -207,12 +208,12 @@
 </div>
 <!-- Pending Requests Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
+    <div class="card border-0 border-start border-4 border-warning shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Phản hồi (Tháng @(Thang != null ? Thang : DateTime.Now.Month))</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.FeedbackQuantity</div>
+                    <div class="text-xs fw-bold text-warning text-uppercase mb-1">Phản hồi (Tháng @(Thang != null ? Thang : DateTime.Now.Month))</div>
+                    <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.FeedbackQuantity</div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -225,17 +226,17 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Bộ lọc</h6>
+        <h6 class="m-0 fw-bold text-primary">Bộ lọc</h6>
     </div>
-    <div class="card-body">
+    <div class="card-body p-4">
         @using (Html.BeginForm("Index", "Home", FormMethod.Post))
         {
-            <div style="padding: 3px; margin-bottom: 20px">
-                <div class="row">
-                    <div class="col" style="max-width: 30%">
+            <div>
+                <div class="row g-4">
+                    <div class="col-lg-6">
                         <div class="input-group">
-                            <div class="form-title">Lọc theo: </div>
-                            <select class="form-control" style="border-radius: 0 6px 6px 0" name="FilterType" id="FilterType">
+                            <div class="input-group-text bg-white">Lọc theo</div>
+                            <select class="form-control" name="FilterType" id="FilterType">
                                 @if (FilterType == "Tháng")
                                 {
                                     <option selected>Tháng</option>
@@ -249,9 +250,9 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6">
                         <div class="input-group">
-                            <div class="form-title">Thời gian:</div>
+                            <div class="input-group-text bg-white">Thời gian</div>
                             <select id="Thang" name="Thang" class="form-control" @hide>
                                 @for (int i = 1; i <= 12; i++)
                                 {
@@ -279,11 +280,12 @@
                                 }
                             </select>
 
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
+                            <button class="btn btn-icon-split btn-primary" type="submit">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-filter"></i>
+                                </span>
+                                <span class="text">Lọc</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -306,10 +308,10 @@
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Bảng thống kê doanh thu</h6>
+            <h6 class="m-0 fw-bold text-primary">Bảng thống kê doanh thu</h6>
         </div>
-        <div class="card-body">
-            <div class="chart-area">
+        <div class="card-body p-4">
+            <div class="chart-area border rounded shadow-sm">
                 <canvas id="myAreaChart"></canvas>
             </div>
         </div>
@@ -318,11 +320,11 @@
 <div class="card shadow mb-4">
     <!-- Card Header - Dropdown -->
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Sản Phẩm</h6>
+        <h6 class="m-0 fw-bold text-primary">Sản Phẩm</h6>
     </div>
     <!-- Card Body -->
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive p-2">
             <!-- Top sản phẩm bán chạy -->
             @if (listTopProductByQuantity.Count() > 0)
             {
@@ -330,14 +332,14 @@
                 var j = 1;
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                        <tr><th colspan="3"><center>TOP @listTopProductByQuantity.Count() SẢN PHẨM BÁN CHẠY NHẤT</center></th></tr>
+                        <tr><th colspan="4"><center>TOP SẢN PHẨM BÁN CHẠY</center></th></tr>
                     </thead>
 
                     <thead>
-                        <tr>
-                            <th style="text-align:center">Top</th>
+                        <tr align="center">
+                            <th>Top</th>
                             <th>Tên sản phẩm</th>
-                            <th style="width: 30%">Số lượng đã bán</th>
+                            <th style="width: 30%">Đã bán</th>
                         </tr>
                     </thead>
 
@@ -345,25 +347,31 @@
 
                         @foreach (var item in listTopProductByQuantity)
                         {
-                            <tr>
-                                <td align="center">@(i++)</td>
-                                <td>@item.Name</td>
-                                <td>@item.Quantity Chiếc</td>
-                            </tr>
+                        <tr class="align-middle">
+                            <td align="center">@(i++)</td>
+                            <td align="center">
+                                <div class="d-flex">
+                                    <img src="@item.Image" width="40" height="40" alt="@item.Name" class="me-2" />
+                                    <span class="my-auto">@item.Name</span>
+                                </div>
+                            </td>
+                            <td align="center">@item.Quantity Chiếc</td>
+                        </tr>
                         }
 
                     </tbody>
 
                 </table>
-            <!-- Top sản phẩm theo doanh thu -->
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+                <!-- Top sản phẩm theo doanh thu -->
+                <table class="table table-bordered mt-5 mb-0" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                        <tr><th colspan="3"><center>TOP @listTopProductByPrice.Count() PHẨM CÓ DOANH THU CAO NHẤT</center></th></tr>
+                        <tr><th colspan="4"><center>TOP SẢN PHẨM CÓ DOANH THU CAO</center></th></tr>
                     </thead>
                     <thead>
-                        <tr>
+                        <tr align="center">
                             <th style="text-align:center">Top</th>
-                            <th>Tên sản phẩm</th>
+                            <th>Sản phẩm</th>
                             <th style="width: 30%">Tổng doanh thu</th>
                         </tr>
                     </thead>
@@ -371,10 +379,18 @@
                     <tbody>
                         @foreach (var item in listTopProductByPrice)
                         {
-                            <tr>
+                            <tr class="align-middle">
                                 <td align="center">@(j++)</td>
-                                <td>@item.Name</td>
-                                <td>@(item.Price.ToString("N0"))đ</td>
+                                <td align="center">
+                                    <div class="d-flex">
+                                        <img src="@item.Image" width="40" height="40" alt="@item.Name" class="me-2" />
+                                        <span class="my-auto">
+                                            @item.Name
+                                        </span>
+                                    </div>
+                                <td align="center">
+                                    @(item.Price.ToString("N0"))đ
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -382,7 +398,7 @@
             }
             else
             {
-                <div class="alert alert-danger">Chưa có sản phẩm nào</div>
+                <div class="alert alert-danger mb-0">Không có dữ liệu</div>
             }
         </div>
     </div>

@@ -26,6 +26,12 @@ namespace WatchShop
             );
 
             routes.MapRoute(
+                name: "All Product",
+                url: "San-pham",
+                defaults: new { controller = "Product", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "WatchShop.Controllers" }
+            );
+            routes.MapRoute(
                 name: "Product Category",
                 url: "San-pham/{metatitle}-{CategoryId}",
                 defaults: new { controller = "Product", action = "ProductCategory", id = UrlParameter.Optional },

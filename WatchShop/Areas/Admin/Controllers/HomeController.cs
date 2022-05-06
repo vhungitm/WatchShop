@@ -60,7 +60,7 @@ namespace WatchShop.Areas.Admin.Controllers
 
                 for (int i = 1; i < 13; i++)
                 {
-                    dataString += listPrice[i - 1] != null ? (listPrice[i - 1].ToString() + ",") : "0,";
+                    dataString += listPrice[i - 1] != 0 ? (listPrice[i - 1].ToString() + ",") : "0,";
                     labelString += "\"Tháng " + i + "\",";
                 }
             }
@@ -69,7 +69,7 @@ namespace WatchShop.Areas.Admin.Controllers
                 int Day = DateTime.DaysInMonth(date.Year, date.Month);
                 for (int i = 1; i <= Day; i++)
                 {
-                    dataString += listPrice[i - 1] != null ? (listPrice[i - 1].ToString() + ",") : "0,";
+                    dataString += listPrice[i - 1] != 0 ? (listPrice[i - 1].ToString() + ",") : "0,";
                     labelString += "\"Ng " + i + "\",";
                 }
             }

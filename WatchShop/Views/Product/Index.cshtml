@@ -1,0 +1,76 @@
+﻿@model PagedList.IPagedList<Model.ViewModel.ProductViewModel>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Sản phẩm" + (Model.PageNumber > 0 ? (" - Trang " + Model.PageNumber) : "");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid p-5">
+    @Html.Action("Banner", "Home")
+
+    <div class="card shadow mt-2 mb-4">
+        <div class="card-header py-3 bg-white">
+            <h6 class="fw-bold m-0">Sản Phẩm</h6>
+
+        </div>
+        <div class="card-body p-4">
+            @if (Model.Count > 0)
+            {
+                <div class="row row-cols-1 g-4 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <a href="/Chi-tiet/@item.MetaTitle-@item.ID" class="text-dark">
+                                <div class="text-center p-3" style="height: 100%">
+                                    <div class="mb-3" style="width: 100%; height: 250px; background: url(@item.Image); background-size: cover; background-position: 50%">
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 10pt">
+                                            @item.Name
+                                        </div>
+                                        @if (item.PromotionPrice > 0)
+                                        {
+                                            <div class="fw-bold">
+                                                @item.PromotionPrice.ToString("N0")đ
+                                            </div>
+                                            <div style="font-size: 8pt" class="text-decoration-line-through">
+                                                @item.Price.ToString("N0")đ
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="fw-bold">
+                                                @item.Price.ToString("N0")đ
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+                if (Model.PageCount > 1)
+                {
+                    <div class="mt-4 mb-2 text-center">Trang @Model.PageNumber / @Model.PageCount</div>
+
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }), new PagedListRenderOptions
+                    {
+                       MaximumPageNumbersToDisplay = 5,
+                       ContainerDivClasses = new string[] { "pagination-container d-flex justify-content-center" },
+                       UlElementClasses = new string[] { "pagination mb-0" },
+                       DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                       DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                       LinkToPreviousPageFormat = "Trước",
+                       LinkToNextPageFormat = "Sau",
+                       LinkToFirstPageFormat = "Đầu",
+                       LinkToLastPageFormat = "Cuối"
+                    })
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger mb-0">Không có sản phẩm!</div>
+            }
+        </div>
+    </div>
+</div>

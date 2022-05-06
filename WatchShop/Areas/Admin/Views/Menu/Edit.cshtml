@@ -1,7 +1,7 @@
 ﻿@model Model.EF.Menu
 
 @{
-    ViewBag.Title = "Thêm mới Menu";
+    ViewBag.Title = "Cập nhật thông tin menu";
     Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,13 +10,14 @@
 }
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Thêm mới</h6>
+        <h6 class="m-0 fw-bold text-primary">Cập Nhật</h6>
     </div>
-    <div class="card-body">
+    <div class="card-body pb-0">
         @using (Html.BeginForm("Edit", "Menu", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+
             <div class="form-group">
                 <label>Tên Menu</label>
                 @Html.TextBoxFor(model => model.Text, new { @class = "form-control" })
@@ -28,34 +29,35 @@
                 @Html.ValidationMessageFor(model => model.Link)
             </div>
             <div class="form-group">
-                <div class="row">
-                    <div class="col">
-                        <label>Thứ tự xuất hiện</label>
-                        @Html.TextBoxFor(model => model.DisplayOrder, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.DisplayOrder)
-                    </div>
-                    <div class="col">
-                        <label>Target</label>
-                        @Html.DropDownListFor(model => model.Target, new SelectList(new[] { "_blank", "_self" }), new { @class = "form-control", })
-                        @Html.ValidationMessageFor(model => model.Target)
-                    </div>
-                    <div class="col">
-                        <label>Loại Menu</label>
-                        @Html.DropDownListFor(model => model.TypeID, null, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.TypeID)
-                    </div>
+                <label>Thứ tự xuất hiện</label>
+                @Html.TextBoxFor(model => model.DisplayOrder, new { @class = "form-control", @type = "number" })
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+            <div class="form-group">
+                <label>Target</label>
+                @Html.DropDownListFor(model => model.Target, new SelectList(new[] { "_blank", "_self" }), new { @class = "form-select", })
+                @Html.ValidationMessageFor(model => model.Target)
+            </div>
+            <div class="form-group">
+                <label>Loại Menu</label>
+                @Html.DropDownListFor(model => model.TypeID, null, new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.TypeID)
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.Status, new { @class = "form-check-input" })
+                    <label class="form-check-label" for="Status">
+                        Kích hoạt
+                    </label>
                 </div>
             </div>
             <div class="form-group">
-                <div class="custom-control custom-switch">
-                    @Html.CheckBoxFor(model => model.Status, new { @class = "custom-control-input", @id = "Status" })
-                    <label class="custom-control-label" for="Status">Kích hoạt</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <center>
-                    <input type="submit" value="Hoàn thành" class="btn btn-primary" />
-                </center>
+                <button type="submit" class="btn btn-icon-split btn-primary">
+                    <span class="icon text-white-50 fw-bold">
+                        <i class="fas fa-floppy-disk fa-fw"></i>
+                    </span>
+                    <span class="text">Lưu dữ liệu</span>
+                </button>
             </div>
         }
     </div>

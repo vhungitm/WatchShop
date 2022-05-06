@@ -8,31 +8,35 @@
 @section Header{
     Footer
 }
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Cập nhật</h6>
+        <h6 class="m-0 fw-bold text-primary">Cập Nhật</h6>
     </div>
-    <div class="card-body">
+    <div class="card-body pb-0">
         @using (Html.BeginForm("Index", "Footer", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true)
+
             <div class="form-group">
                 @Html.TextAreaFor(model => model.Content, new { @class = "form-control rounded-0", @rows = "15" })
                 @Html.ValidationMessageFor(model => model.Content)
             </div>
-
             <div class="form-group">
-                <div class="custom-control custom-switch">
-                    @Html.CheckBoxFor(model => model.Status, new { @class = "custom-control-input", @id = "Status" })
-                    <label class="custom-control-label" for="Status">Kích hoạt</label>
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.Status, new { @class = "form-check-input" })
+                    <label class="form-check-label" for="Status">
+                        Kích hoạt
+                    </label>
                 </div>
             </div>
-
             <div class="form-group">
-                <center>
-                    <input type="submit" value="Hoàn thành" class="btn btn-primary" />
-                </center>
+                <button type="submit" class="btn btn-icon-split btn-primary">
+                    <span class="icon text-white-50 fw-bold">
+                        <i class="fas fa-floppy-disk fa-fw"></i>
+                    </span>
+                    <span class="text">Lưu dữ liệu</span>
+                </button>
             </div>
         }
     </div>

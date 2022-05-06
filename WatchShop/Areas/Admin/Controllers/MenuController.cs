@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Model.Dao;
 using Model.EF;
-using WatchShop.Common;
+using WatchShop.Utils;
+
 namespace WatchShop.Areas.Admin.Controllers
 {
     public class MenuController : BaseController
@@ -32,6 +29,7 @@ namespace WatchShop.Areas.Admin.Controllers
         public ActionResult Create(Menu Entity)
         {
             SetViewBag();
+
             if (ModelState.IsValid)
             {
                 var dao = new MenuDao();

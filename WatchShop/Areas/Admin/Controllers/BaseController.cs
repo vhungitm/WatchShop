@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using WatchShop.Common;
+using Common;
+using Model.EF;
+
 namespace WatchShop.Areas.Admin.Controllers
 {
     public class BaseController : Controller
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var session = (UserLogin)Session[CommonConstants.USER_SESSION];
-            if (session == null)
+            var session = (User)Session[CommonConstants.USER_SESSION];
+            if (session == null || session.GroupID != CommonConstants.ADMIN_GROUP)
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index", Area = "Admin" }));
             }
@@ -23,7 +23,7 @@ namespace WatchShop.Areas.Admin.Controllers
             TempData["AlertMessage"] = message;
             if (type == AlertType.Success)
             {
-                TempData["AlertType"] = "alert-success";
+                TempData["AlertType"] = "alert-primary";
             }
             else if (type == AlertType.Warning)
             {

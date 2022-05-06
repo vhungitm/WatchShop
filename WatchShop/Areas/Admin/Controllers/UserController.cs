@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Model.EF;
 using Model.Dao;
-using WatchShop.Common;
-using PagedList;
-using WatchShop.Areas.Admin.Models;
+using Common;
+using WatchShop.Utils;
 
 namespace WatchShop.Areas.Admin.Controllers
 {
@@ -35,17 +31,25 @@ namespace WatchShop.Areas.Admin.Controllers
         public ActionResult Create(User Entity)
         {
             SetViewBag();
+
             if (ModelState.IsValid)
             {
                 var dao = new UserDao();
-                if (dao.GetByUsername(Entity.Username) != null)
+                if (dao.GetByPhone(Entity.Phone) != null)
                 {
-                    SetAlert("Tài khoản này đã tồn tại", AlertType.Error);
-                    return View("Create");
+                    SetAlert("Số điện thoại này đã được sử dụng trước đó!", AlertType.Error);
+                    return View();
                 }
-                var EnCryptedMd5Pas = Encryptor.MD5Hash(Entity.Password);
-                Entity.Password = EnCryptedMd5Pas;
-                Entity.CreatedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người tạo
+
+                if (dao.GetByEmail(Entity.Email) != null)
+                {
+                    SetAlert("Email này đã được đăng ký trước đó!", AlertType.Error);
+                    return View();
+                }
+
+                Entity.Username = Entity.Phone;
+                Entity.Password = Encryptor.MD5Hash(Entity.Password);
+                Entity.CreatedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người tạo
                 Entity.CreatedDate = DateTime.Now;  // Thời gian tạo
 
                 if (dao.Insert(Entity))
@@ -63,24 +67,48 @@ namespace WatchShop.Areas.Admin.Controllers
 
 
         [HttpGet]
-        [HasCredential(RoleID = "ADD_USER")]
+        [HasCredential(RoleID = "EDIT_USER")]
         public ActionResult Edit(long id)
         {
-            var dao = new UserDao().GetById(id);
-            SetViewBag(dao.GroupID);
-            return View(dao);
+            var Entity = new UserDao().GetById(id);
+            
+            SetViewBag(Entity.GroupID);
+            Entity.Password = null;
+
+            return View(Entity);
         }
 
         [HttpPost]
         [HasCredential(RoleID = "EDIT_USER")]
         public ActionResult Edit(User Entity)
         {
+            SetViewBag(Entity.GroupID);
+
             if (ModelState.IsValid)
             {
                 var dao = new UserDao();
-                Entity.Password = Encryptor.MD5Hash(Entity.Password); // Mã hóa mật khẩu
-                Entity.ModifiedBy = ((UserLogin)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người cập nhật
+
+                var user = dao.GetById(Entity.ID);
+                var userCheckPhone = dao.GetByPhone(Entity.Phone);
+
+                if (userCheckPhone != null && user.Phone != userCheckPhone.Phone)
+                {
+                    SetAlert("Số điện thoại này đã được người khác sử dụng!", AlertType.Error);
+                    return View();
+                }
+
+                var userCheckEmail = dao.GetByEmail(Entity.Email);
+
+                if (userCheckEmail != null && user.Email != userCheckEmail.Email)
+                {
+                    SetAlert("Email này đã được người khác sử dụng!", AlertType.Error);
+                    return View();
+                }
+
+                Entity.Username = Entity.Phone;
+                Entity.ModifiedBy = ((User)Session[CommonConstants.USER_SESSION]).Username.ToString();  // Người cập nhật
                 Entity.ModifiedDate = DateTime.Now;  // Thời gian cập nhật
+                Entity.Password = Entity.Password != null ? Encryptor.MD5Hash(Entity.Password) : null;
 
                 var res = dao.Update(Entity);
 
@@ -95,7 +123,7 @@ namespace WatchShop.Areas.Admin.Controllers
                 }
                 
             }
-            SetViewBag(Entity.GroupID);
+
             return View("Edit");
         }
 

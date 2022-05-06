@@ -1,0 +1,25 @@
+﻿@model List<Model.EF.Banner>
+@{
+    var iBanner = 0;
+}
+
+<div id="carouselExampleControls" class="carousel slide shadow mb-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @foreach (var item in Model)
+        {
+            <div class="carousel-item @(iBanner == 0 ? "active" : "")">
+                <div class="rounded" style="background: url(@item.Image); background-position: center; background-size: cover; height: 500px"></div>
+            </div>
+            @(iBanner++)
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+

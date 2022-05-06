@@ -1,0 +1,79 @@
+﻿@model Model.EF.Feedback
+
+@{
+    ViewBag.Title = "WatchShop - Liên hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Infor = (List<Model.EF.Contact>)ViewBag.Infor;
+}
+
+<section class="contact-section padding_top">
+    <div class="container">
+        <div class="d-none d-sm-block mb-5 pb-4">
+            <h2>Bản đồ</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15667.083768370954!2d106.6744477!3d10.9806545!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xe2bf4f397d0aa76!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBUaOG7pyBE4bqndSBN4buZdA!5e0!3m2!1svi!2s!4v1574246670777!5m2!1svi!2s" width="100%" height="500" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h2 class="contact-title">Gửi phản hồi</h2>
+            </div>
+            <div class="col-lg-8">
+                @using (Html.BeginForm("Index", "Contact", FormMethod.Post, new { @class = "form-contact contact_form" }))
+                {
+                    if (ViewBag.Success != null)
+                    {
+                        <div class="alert alert-success">
+                            @ViewBag.Success
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                @Html.TextAreaFor(model => model.Content, new { @class = "form-control w-100", @placeholder = "Nội dung phản hồi", @cols = "30", @rows = "9" })
+                                <p>@Html.ValidationMessageFor(model => model.Content, null, new { @class = "text-danger" })</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Họ tên" })
+                                <p>@Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger" })</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @placeholder = "Số điện thoại" })
+                                <p>@Html.ValidationMessageFor(model => model.Phone, null, new { @class = "text-danger" })</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Địa chỉ Email" })
+                                <p>@Html.ValidationMessageFor(model => model.Email, null, new { @class = "text-danger" })</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control", @placeholder = "Địa chỉ" })
+                                <p>@Html.ValidationMessageFor(model => model.Address, null, new { @class = "text-danger" })</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button class="genric-btn primary circle arrow">GỬI PHẢN HỒI</button>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-4">
+                @foreach (var item in Infor)
+                {
+                    <div class="media contact-info">
+                        <div class="media-body">
+                            <h3>@item.Name</h3>
+                            <p>@item.Content</p>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>

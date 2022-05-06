@@ -50,6 +50,7 @@ namespace Model.Dao
                          {
                              ID = g.Key,
                              Name = (from gg in g join product in db.Products on gg.ProductID equals product.ID select product.Name).FirstOrDefault(),
+                             Image = (from gg in g join product in db.Products on gg.ProductID equals product.ID select product.Image).FirstOrDefault(),
                              Quantity = g.Sum(x => x.Quantity),
                              Price = g.Sum(x => x.Price),
                              CreatedDate = (from gg in g select gg.CreatedDate).FirstOrDefault(),

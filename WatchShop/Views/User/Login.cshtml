@@ -1,57 +1,75 @@
-﻿@model WatchShop.Models.LoginModel
+﻿@model Model.Login
 @{
     Layout = "/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Đăng ký";
+    ViewBag.Title = "Đăng nhập";
 }
-<section class="login_part section_padding">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 col-md-6">
-                <div class="login_part_form">
-                    <div class="login_part_form_iner">
-                        <h3>
-                            ĐĂNG NHẬP
-                        </h3>
 
-
-                        @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @class = "row contact_form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <div class="col-md-12 form-group p_star">
-                                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                            </div>
-
-                            if (ViewBag.Success != null)
-                            {
-                                <div class="col-md-12 form-group p_star">
-                                    <div class="alert alert-success">@ViewBag.Success</div>
-                                </div>
-                            }
-
-                            <div class="col-md-12 form-group p_star">
-                                @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Tài khoản" })
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @placeholder = "Mật khẩu", @type = "password" })
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <button class="btn btn-primary btn-user btn-block">
-                                    Đăng Nhập
-                                </button>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <a href="/User/LoginFacebook"style="color: white" class="btn btn-primary btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Đăng nhập bằng Facebook!
-                                </a>
-                            </div>
-                        }
-
-
-                        
+<div class="container">
+    <div class="p-5">
+        <div class="card shadow border-0 m-5 o-hidden">
+            <div class="card-body p-0">
+                <div class="row g-0">
+                    <div class="col-lg-6 d-none d-lg-block" style="background: url(/Images/watch-background.jpg); background-position: center; background-size: cover;">
                     </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="bg-white border-0 pt-5">
+                                <h6 class="text-center fw-bold">ĐĂNG NHẬP</h6>
+                            </div>
+                            <div class="mx-auto pb-5">
+                                <div class="text-center mb-5 mt-3">
+                                    <img src="~/Images/no-avatar.png" alt="user" class="rounded-circle" />
+                                </div>
+                                @using (Html.BeginForm("Login", "User", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(false, "")
 
+                                    if (ViewBag.Success != null)
+                                    {
+                                        <div class="alert alert-primary">@ViewBag.Success</div>
+                                    }
+
+                                    <div class="form-group">
+                                        <label>
+                                            <i class="fas fa-user me-2"></i>
+                                            Tài khoản
+                                        </label>
+                                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Tài khoản" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <i class="fas fa-lock me-2"></i>
+                                            Mật khẩu
+                                        </label>
+                                        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @placeholder = "Mật khẩu", @type = "password" })
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="ckbRemember">
+                                            <label class="form-check-label" for="ckbRemember">
+                                                Nhớ tài khoản
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div>
+                                            <button class="btn btn-primary btn-block text-center mb-3">
+                                                <i class="fas fa-sign-in me-2"></i>Đăng nhập
+                                            </button>
+
+                                            <a href="/User/LoginFacebook" class="btn btn-block btn-primary text-center">
+                                                <i class="fa-brands fa-facebook me-2"></i>Đăng nhập bằng Facebook
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
-</section>
+</div>

@@ -1,0 +1,88 @@
+﻿@model List<WatchShop.Models.CartItem>
+@{
+    ViewBag.Title = "WatchShop - Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section jsFooter{
+    <script src="/Assets/client/js/controller/cartController.js"></script>
+}
+@if (Model.Count() > 0)
+{
+    <section class="cart_area section_padding">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sản phẩm</th>
+                                <th scope="col">Giá</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="media">
+                                            <div class="d-flex">
+                                                <img src="@item.Product.Image" alt="@item.Product.Name" />
+                                            </div>
+                                            <div class="media-body">
+                                                <p>@item.Product.Name</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+
+                                        @if (item.Product.PromotionPrice == 0)
+                                        {
+                                            <h5>@(item.Product.Price)đ</h5>
+                                        }
+                                        else
+                                        {
+                                            <h5>@(item.Product.PromotionPrice)đ</h5>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        <div class="product_count">
+                                            <span class="input-number-decrement"> <i class="ti-minus"></i></span>
+                                            <input class="txtQuantity input-number" type="text" min="0" max="100" data-id="@item.Product.ID" value="@item.Quantity">
+                                            <span class="input-number-increment"> <i class="ti-plus"></i></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (item.Product.PromotionPrice == 0)
+                                        {
+                                            <h5>@(item.Product.Price * item.Quantity)đ</h5>
+                                        }
+                                        else
+                                        {
+                                            <h5>@(item.Product.PromotionPrice * item.Quantity)đ</h5>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="#" data-id="@item.Product.ID" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="checkout_btn_inner">
+                        <a class="genric-btn primary-border radius" id="btnUpdate" href="#">Cập nhật giỏ hàng</a>
+                        <button id="btnDeleteAll" class="genric-btn danger-border radius">Xóa toàn bộ</button>
+                        <a class="genric-btn primary-border radius" id="btnContinue" href="/">Tiếp tục mua hàng</a>
+                        <a class="genric-btn primary-border radius" id="btnPayment" href="#">Kiểm tra thanh toán</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <div class="alert alert-danger" style="margin: 10px">Chưa có sản phẩm trong giỏ hàng</div>
+}

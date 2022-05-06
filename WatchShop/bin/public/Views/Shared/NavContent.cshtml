@@ -1,0 +1,38 @@
+﻿@model Model.EF.Content
+@{
+    var listNewContent = (List<Model.EF.Content>)ViewBag.ListNewContent;
+    var listTopHotContent = (List<Model.EF.Content>)ViewBag.ListTopHotContent;
+}
+<aside class="single_sidebar_widget popular_post_widget">
+    <h3 class="widget_title">Tin nóng</h3>
+    @foreach (var item in listTopHotContent)
+    {
+        <div class="media post_item">
+            <img src="@item.Image" alt="post" width="80" height="60">
+            <div class="media-body">
+                <a href="/tin-tuc/@item.MetaTitle-@item.ID">
+                    <h3>@item.Name</h3>
+                </a>
+                <p>@item.CreatedDate</p>
+            </div>
+        </div>
+    }
+</aside>
+
+<aside class="single_sidebar_widget popular_post_widget">
+    <h3 class="widget_title">Tin mới</h3>
+    @foreach (var item in listNewContent)
+    {
+        <div class="media post_item">
+            <img src="@item.Image" alt="post" width="80" height="60">
+            <div class="media-body">
+                <a href="/tin-tuc/@item.MetaTitle-@item.ID">
+                    <h3>@item.Name</h3>
+                </a>
+                <p>@item.CreatedDate</p>
+            </div>
+        </div>
+    }
+</aside>
+
+

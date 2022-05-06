@@ -1,4 +1,4 @@
-namespace Model.EF
+﻿namespace Model.EF
 {
     using System;
     using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace Model.EF
 
         [Column(TypeName = "ntext")]
         [AllowHtml]
+        [Required(ErrorMessage = "Vui lòng nhập nội dung!")]
         public string Content { get; set; }
 
         public bool Status { get; set; }

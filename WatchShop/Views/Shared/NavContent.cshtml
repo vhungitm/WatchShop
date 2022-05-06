@@ -3,36 +3,85 @@
     var listNewContent = (List<Model.EF.Content>)ViewBag.ListNewContent;
     var listTopHotContent = (List<Model.EF.Content>)ViewBag.ListTopHotContent;
 }
-<aside class="single_sidebar_widget popular_post_widget">
-    <h3 class="widget_title">Tin nóng</h3>
-    @foreach (var item in listTopHotContent)
-    {
-        <div class="media post_item">
-            <img src="@item.Image" alt="post" width="80" height="60">
-            <div class="media-body">
-                <a href="/tin-tuc/@item.MetaTitle-@item.ID">
-                    <h3>@item.Name</h3>
-                </a>
-                <p>@item.CreatedDate</p>
-            </div>
-        </div>
-    }
-</aside>
 
-<aside class="single_sidebar_widget popular_post_widget">
-    <h3 class="widget_title">Tin mới</h3>
-    @foreach (var item in listNewContent)
-    {
-        <div class="media post_item">
-            <img src="@item.Image" alt="post" width="80" height="60">
-            <div class="media-body">
-                <a href="/tin-tuc/@item.MetaTitle-@item.ID">
-                    <h3>@item.Name</h3>
+<div class="mb-4">
+    <div>
+        <h4>Tin Nóng</h4>
+    </div>
+    <div>
+        @if (listTopHotContent.Count > 0)
+        {
+            foreach (var item in listTopHotContent)
+            {
+                <a href="/Tin-tuc/@item.MetaTitle-@item.ID" class="text-black">
+                    <div class="card shadow o-hidden mb-4">
+                        <div class="row g-0">
+                            <div class="col-3">
+                                <img src="@item.Image" style="width: 100%; height: 100%" alt="@item.Name" />
+                            </div>
+                            <div class="col-9">
+
+                                <div class="card-body">
+                                    <h6 class="card-title o-hidden" style="height: 40px">
+                                        @item.Name
+                                    </h6>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </a>
-                <p>@item.CreatedDate</p>
-            </div>
-        </div>
-    }
-</aside>
+            }
+        }
+        else
+        {
+            <div class="alert alert-danger">Không có tin hot</div>
+        }
+    </div>
+</div>
+
+<div>
+    <div>
+        <h4>Tin Mới</h4>
+    </div>
+    <div>
+        @if (listNewContent.Count > 0)
+        {
+            foreach (var item in listNewContent)
+            {
+                <a href="/Tin-tuc/@item.MetaTitle-@item.ID" class="text-black">
+                    <div class="card shadow o-hidden mb-4">
+                        <div class="row g-0">
+                            <div class="col-3">
+                                <img src="@item.Image" style="width: 100%; height: 100%" alt="@item.Name" />
+                            </div>
+                            <div class="col-9">
+
+                                <div class="card-body">
+                                    <h6 class="card-title" style="height: 40px; overflow-y: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        @item.Name
+                                    </h6>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <div class="alert alert-danger">Không có tin mới</div>
+        }
+    </div>
+</div>
 
 

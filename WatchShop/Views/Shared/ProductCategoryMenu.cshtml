@@ -1,49 +1,64 @@
 ﻿@model List<Model.EF.ProductCategory>
 
-<aside class="left_widgets p_filter_widgets sidebar_box_shadow">
-    <div class="l_w_title">
-        <h3>Danh mục sản phẩm</h3>
-    </div>
-    <div class="widgets_inner">
-        <ul class="list">
-            @foreach (var item in Model.Where(x => x.ParentID == null))
-            {
-                var child = Model.Where(x => x.ParentID == item.ID);
+<ul class="list-group shadow mb-4">
+    <li class="list-group-item py-3" aria-current="true">
+        <h6 class="m-0 fw-bold">
+            Danh Mục Sản Phẩm
+        </h6>
+    </li>
+    @foreach (var item in Model.Where(x => x.ParentID == null))
+    {
+        var child = Model.Where(x => x.ParentID == item.ID);
 
-                if (child.Count() > 0)
-                {
-                    <li class="sub-menu">
-                        <a href="/san-pham/@item.MetaTitle-@item.ID" class=" d-flex justify-content-between">
-                            @item.Name
-                            <div class="right ti-plus"></div>
-                        </a>
+        if (child.Count() > 0)
+        {
+            <li class="list-group-item">
+                <a href="/san-pham/@item.MetaTitle-@item.ID" class="text-black d-flex justify-content-between">
+                    @item.Name
+                    <div class="btn-show-product-category-child fas fa-chevron-right" data-show="false" data-id="@item.ID"></div>
+                </a>
 
-                        <ul>
-                            @foreach (var childItem in child)
-                            {
-                                <li>
-                                    <a href="/San-pham/@childItem.MetaTitle-@childItem.ID">@childItem.Name</a>
-                                </li>
-                            }
+                <ul>
+                    @foreach (var childItem in child)
+                    {
+                        <li class="list-group-item border-0 ps-0" style="display: none" for="product-@item.ID">
+                            <a href="/San-pham/@childItem.MetaTitle-@childItem.ID" class="text-black">@childItem.Name</a>
+                        </li> 
+                    }
 
-                        </ul>
-                    </li>
-                }
-                else
-                {
-                    <li>
-                        <a href="/San-pham/@item.MetaTitle-@item.ID">@item.Name</a>
-                    </li>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <a href="/San-pham/@item.MetaTitle-@item.ID" class="text-black">@item.Name</a>
+            </li>
 
-                }
+        }
+    }
+</ul>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-show-product-category-child").off('click').on('click', function (e) {
+            e.preventDefault();
+
+            let btn = $(this);
+            let id = btn.data('id');
+            let show = btn.data('show');
+            let productChild = '[for="product-' + id + '"]';
+
+            if (show) {
+                $(productChild).attr('style', 'display: none');
+                btn.attr('class', 'btn-show-product-category-child fas fa-chevron-right');
+            } else {
+                $(productChild).removeAttr('style');
+                btn.attr('class', 'btn-show-product-category-child fas fa-chevron-down');
             }
-        </ul>
-    </div>
-    <script>
-        $(document).ready(function () {
-            $(".right.ti-plus").off('click').on('click', function (e) {
-                e.preventDefault();
-            });
+
+            btn.data('show', !show);
         });
-    </script>
-</aside>
+    });
+</script>
+

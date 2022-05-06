@@ -1,31 +1,35 @@
 ﻿@model Model.EF.MenuType
 
 @{
-    ViewBag.Title = "Cập Nhật Danh Mục Menu";
+    ViewBag.Title = "Cập nhật thông tin danh mục menu";
     Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 @section Header{
     Danh Mục Menu
 }
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Cập Nhật</h6>
+        <h6 class="m-0 fw-bold text-primary">Thêm Mới</h6>
     </div>
-    <div class="card-body">
+    <div class="card-body pb-0">
         @using (Html.BeginForm("Edit", "MenuType", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true)
+
             <div class="form-group">
                 <label>Tên danh mục Menu</label>
                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Name)
             </div>
             <div class="form-group">
-                <center>
-                    <input type="submit" value="Hoàn thành" class="btn btn-primary" />
-                </center>
+                <button type="submit" class="btn btn-icon-split btn-primary">
+                    <span class="icon text-white-50 fw-bold">
+                        <i class="fas fa-floppy-disk fa-fw"></i>
+                    </span>
+                    <span class="text">Lưu dữ liệu</span>
+                </button>
             </div>
         }
     </div>

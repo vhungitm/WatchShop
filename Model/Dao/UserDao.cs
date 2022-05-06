@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PagedList;
 using Common;
+
 namespace Model.Dao
 {
     public class UserDao
@@ -26,60 +25,52 @@ namespace Model.Dao
         }
         public User GetByUsername(string username)
         {
-            return db.Users.SingleOrDefault(x => x.Username == username);
+            return db.Users.SingleOrDefault(x => x.Username == username || x.Phone == username || x.Email == username);
         }
-        public int Login(string username, string password, bool isLoginAdmin = false)
+
+        public User GetByPhone(string phone)
         {
-            var result = db.Users.SingleOrDefault(x => x.Username == username);
-            if (result == null)
+            return db.Users.SingleOrDefault(x => x.Phone == phone);
+        }
+
+        public User GetByEmail(string email)
+        {
+            return db.Users.SingleOrDefault(x => x.Email == email);
+        }
+
+        public Response Login(Login model)
+        {
+            var password = Encryptor.MD5Hash(model.Password);
+            var result = db.Users.SingleOrDefault(x => 
+                (x.Username == model.Username || x.Email == model.Username || x.Phone == model.Username) &&
+                (x.Password == password) &&
+                (model.GroupID == CommonConstants.ADMIN_GROUP ? (x.GroupID == model.GroupID) : true)
+            );
+            var response = new Response();
+
+            if (result != null)
             {
-                return 0; //Tài khoản không tồn tại
-            }
-            else
-            {
-                if (isLoginAdmin == true)
+                if (result.Status)
                 {
-                    if (result.GroupID == CommonConstants.ADMIN_GROUP || result.GroupID == CommonConstants.MOD_GROUP)
-                    {
-                        if (!result.Status)
-                        {
-                            return -1; //Tài khoản bị khóa
-                        }
-                        else
-                        {
-                            if (result.Password == password)
-                            {
-                                return 1; //Tài khoản chính xác
-                            }
-                            else
-                            {
-                                return -2; //Sai mật khẩu
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return -3; // Không có quyền truy cập
-                    }
+                    response.Status = true;
+                    response.Message = "Đăng nhập thành công!";
+
+                    return response;
                 }
                 else
                 {
-                    if (!result.Status)
-                    {
-                        return -1; //Tài khoản bị khóa
-                    }
-                    else
-                    {
-                        if (result.Password == password)
-                        {
-                            return 1; //Tài khoản chính xác
-                        }
-                        else
-                        {
-                            return -2; //Sai mật khẩu
-                        }
-                    }
+                    response.Status = false;
+                    response.Message = "Tài khoản của bạn đã bị khóa! Vui lòng liên hệ với Admin để được mở lại!";
+
+                    return response;
                 }
+            }
+            else
+            {
+                response.Status = false;
+                response.Message = "Sai tên tài khoản hoặc mật khẩu!";
+
+                return response;
             }
         }
 
@@ -117,7 +108,7 @@ namespace Model.Dao
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { return false; }
+            catch { return false; }
         }
         public User GetById(long id)
         {
@@ -128,7 +119,7 @@ namespace Model.Dao
             try
             {
                 var Entity = db.Users.Find(NewEntity.ID);
-                Entity.Password = NewEntity.Password;
+                Entity.Password = NewEntity.Password != null ? NewEntity.Password : Entity.Password;
                 Entity.Name = NewEntity.Name;
                 Entity.GroupID = NewEntity.GroupID;
                 Entity.Gender = NewEntity.Gender;
@@ -142,7 +133,7 @@ namespace Model.Dao
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { return false; }
+            catch { return false; }
         }
         public bool ChangStatus(long id)
         {

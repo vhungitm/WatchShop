@@ -1,0 +1,36 @@
+﻿@model Model.EF.Feedback
+@{
+    ViewBag.Title = "Chi Tiết Phản Hồi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Header{
+    Phản hồi
+}
+@section jsFooter{
+    <script src="/Assets/Admin/js/controller/feedbackController.js"></script>
+}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <span class="m-0 font-weight-bold text-primary">
+            Chi Tiết
+        </span>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <p>Họ tên: @Model.Name</p>
+            <p>Số điện thoại: @Model.Phone</p>
+            <p>Địa chỉ: @Model.Address</p>
+            <p>Email: @Model.Email</p>
+            <p>Nội dung phản hồi:</p>
+            <p>@Html.Raw(Model.Content)</p>
+            <p>Trạng thái: 
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class = "custom-control-input" id = "Status" checked="@Model.Status" data-id="@Model.ID"/>
+                    <label class="custom-control-label" for="Status">Đã xem</label>
+                </div>
+            </p>
+        </div>
+    </div>
+</div>

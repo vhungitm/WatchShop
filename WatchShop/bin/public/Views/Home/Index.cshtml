@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "WatchShop - Trang Chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var listNewContents = (List<Model.EF.Content>)ViewBag.listNewContents;
+    var listNewProducts = (List<Model.EF.Product>)ViewBag.listNewProducts;
+    var listFeatureProducts = (List<Model.EF.Product>)ViewBag.listFeatureProducts;
+}
+<section class="banner_part">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="banner_slider">
+                    <div class="single_banner_slider">
+                        <div class="banner_text">
+                            <div class="banner_text_iner" >
+                                <h5 style ="color: white">WatchShop</h5style>
+                                    <h1 style="color: white">Cửa hàng đồng hồ trực tuyến số 1 Việt Nam!</h1>
+                                <a href="#" class="btn_1">shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- top hot -->
+<section class="new_arrival section_padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="arrival_tittle">
+                    <h2>TOP HOT</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="new_arrival_iner filter-container">
+                    @foreach (var item in listFeatureProducts)
+                    {
+                        <div class="single_arrivel_item weidth_2 mix">
+                            <img src="@item.Image" alt="@item.Name" height="100%" width="100%">
+                            <div class="hover_text">
+                                <a href="/chi-tiet/@item.MetaTitle-@item.ID"><h3>@item.Name</h3></a>
+                                <div class="rate_icon">
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                </div>
+                                <h5>
+                                    @if (item.PromotionPrice == 0)
+                                    {
+                                        @item.Price.ToString("N0")
+                                    }
+                                    else
+                                    {
+                                        @(item.PromotionPrice.ToString("N0"))<span>đ</span><br /><strike style="font-size: 18px">@(item.Price.ToString("N0"))đ</strike>
+                                    }
+                                </h5>
+                                <div class="social_icon">
+                                    <a href="#"><i class="fas fa-heart"></i></a>
+                                    <a href="/Them-gio-hang?productId=@item.ID&quantity=1"><i class="fas fa-shopping-cart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- top hot end -->
+<!-- new product -->
+<section class="new_arrival section_padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="arrival_tittle">
+                    <h2>SẢN PHẨM MỚI</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="new_arrival_iner filter-container">
+                    @foreach (var item in listNewProducts)
+                    {
+                        <div class="single_arrivel_item weidth_2 mix">
+                            <img src="@item.Image" alt="@item.Name" height="100%" width="100%">
+                            <div class="hover_text">
+                                <a href="/chi-tiet/@item.MetaTitle-@item.ID"><h3>@item.Name</h3></a>
+                                <div class="rate_icon">
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                    <a href="#"> <i class="fas fa-star"></i> </a>
+                                </div>
+                                <h5>
+                                    @if (item.PromotionPrice == 0)
+                                    {
+                                        @item.Price.ToString("N0")
+                                    }
+                                    else
+                                    {
+                                        @(item.PromotionPrice.ToString("N0"))<span>đ</span><br /><strike style="font-size: 18px">@(item.Price.ToString("N0"))đ</strike>
+                                    }
+                                </h5>
+                                <div class="social_icon">
+                                    <a href="#"><i class="fas fa-heart"></i></a>
+                                    <a href="/Them-gio-hang?productId=@item.ID&quantity=1"><i class="fas fa-shopping-cart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- new product end -->
+<!-- new content -->
+<section class="new_arrival section_padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="arrival_tittle">
+                    <h2>TIN TỨC MỚI</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in listNewContents)
+    {
+        <article class="blog_item" style="width: 32.8%; display: inline-table; margin-left: 4px">
+            <div class="blog_item_img">
+                <img class="card-img rounded-0" src="@item.Image" alt="" height="250px">
+                <a href="/Tin-tuc/@item.MetaTitle-@item.ID" class="blog_item_date">
+                    <center>
+                        <h3>@(item.CreatedDate.Value.Day.ToString().Length < 2 ? "0" : "")@item.CreatedDate.Value.Day</h3>
+                        <p>TH@(item.CreatedDate.Value.Month.ToString().Length < 2 ? "0" : "")@item.CreatedDate.Value.Month</p>
+                    </center>
+                </a>
+            </div>
+
+            <div class="blog_details">
+                <a class="d-inline-block" href="/Tin-tuc/@item.MetaTitle-@item.ID">
+                    <h2>@item.Name</h2>
+                </a>
+                <ul class="blog-info-link">
+                    <li><a href="#"><i class="far fa-user"></i>@item.CreatedBy</a></li>
+                </ul>
+            </div>
+        </article>
+    }
+</section>

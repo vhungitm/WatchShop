@@ -1,26 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Model.Dao;
-using Model.EF;
+using System.Web;
 
 namespace WatchShop.Controllers
 {
     public class HomeController : Controller
     {
-        //
+
         // GET: /Home/
         public ActionResult Index()
         {
             var productDao = new ProductDao();
 
-            int top = 6;
-            ViewBag.listNewContents = new ContentDao().ListNewContent(3);
-            ViewBag.listNewProducts = productDao.ListNewProduct(top);
-            ViewBag.listFeatureProducts = productDao.ListFeatureProduct(top);
+            int topFeatureProducts = 4;
+            int topNewProducts = 8;
+            int topContents = 4;
+
+            ViewBag.listNewContents = new ContentDao().ListNewContent(topContents);
+            ViewBag.listNewProducts = productDao.ListNewProduct(topNewProducts);
+            ViewBag.listFeatureProducts = productDao.ListFeatureProduct(topFeatureProducts);
             return View();
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult Banner()
+        {
+            var result = new BannerDao().ListAll().Where(x => x.Status == true).ToList();
+
+            return PartialView(result);
         }
 
         [ChildActionOnly]
@@ -33,7 +41,6 @@ namespace WatchShop.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 3600 * 24)]
         public PartialViewResult Footer()
         {
             var model = new FooterDao().GetFooter();

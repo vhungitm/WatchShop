@@ -1,4 +1,4 @@
-namespace Model.EF
+﻿namespace Model.EF
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace Model.EF
         [StringLength(20)]
         public string ID { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập tên nhóm tài khoản!")]
         [StringLength(50)]
         public string Name { get; set; }
     }

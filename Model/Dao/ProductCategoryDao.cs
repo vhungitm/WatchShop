@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Model.EF;
-using PagedList; //Phân trang MVC
+using PagedList;
+using Model.ViewModel;
 
 namespace Model.Dao
 {
@@ -22,20 +23,43 @@ namespace Model.Dao
             return db.ProductCategories.SingleOrDefault(x => x.ID == id);
         }
 
-
         public List<ProductCategory> ListAll()
         {
             return db.ProductCategories.Where(x => x.Status == true).OrderBy(x => x.DisplayOrder).ToList();
         }
+
         //Get danh sách danh mục có phân trang
-        public IEnumerable<ProductCategory> ListAllPaging(string searchString, int page, int pageSize)
+        public IEnumerable<ProductCategoryViewModel> ListAllPaging(string searchString, int page, int pageSize)
         {
-            IQueryable<ProductCategory> Entity = db.ProductCategories;
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                Entity = Entity.Where(x => x.Name.Contains(searchString));
-            }
-            return Entity.OrderByDescending(x => x.CreatedDate).ToPagedList(page, pageSize);
+            var model = 
+                from a in db.ProductCategories
+                join b in db.ProductCategories
+                on a.ParentID equals b.ID into g
+                from c in g.DefaultIfEmpty()
+                where (
+                    string.IsNullOrEmpty(searchString) 
+                        ? true 
+                        : a.Name.Contains(searchString)
+                )
+                select new ProductCategoryViewModel
+                {
+                    ID = a.ID,
+                    Name = a.Name,
+                    MetaTitle = a.MetaTitle,
+                    ParentID = a.ParentID,
+                    ParentName = c.Name ?? string.Empty,
+                    DisplayOrder = a.DisplayOrder,
+                    CreatedDate = a.CreatedDate,
+                    CreatedBy = a.CreatedBy,
+                    ModifiedDate = a.ModifiedDate,
+                    ModifiedBy = a.ModifiedBy,
+                    MetaKeywords = a.MetaKeywords,
+                    MetaDescriptions = a.MetaDescriptions,
+                    Status = a.Status,
+                    ShowOnHome = a.ShowOnHome
+                };
+
+            return model.OrderByDescending(x => x.CreatedDate).ToPagedList(page, pageSize);
         }
 
         //Thêm mới
